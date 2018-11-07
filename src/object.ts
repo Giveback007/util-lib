@@ -1,4 +1,4 @@
-import { anyObj, dictionary } from "./@types";
+import { anyObj, dictionary } from ".";
 
 /** Checks if object has the key, made as a function for type transfer */
 export const hasKey = <K extends string>(obj: any, key: K): obj is { [P in K]: any } => key in obj;
@@ -10,6 +10,13 @@ export const objVals = <T = any>(obj: { [key: string]: T }): T[] => objKeys(obj)
 export function genDictionary<T extends anyObj>(arr: T[], idKey: string) {
     const dictionary: dictionary<T> = { };
     arr.forEach((obj) => dictionary[obj[idKey]] = obj);
+
+    return dictionary;
+}
+
+export function genIdxDictionary(arr: (number | string)[]) {
+    const dictionary: dictionary<string> = { };
+    arr.forEach((x, idx) => dictionary[x] = idx + '');
 
     return dictionary;
 }

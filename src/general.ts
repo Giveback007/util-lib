@@ -1,8 +1,4 @@
-import { objVals } from ".";
-import { JsType, JsTypeFind } from "./@types";
-
-/** Generate a random number between min and max, min and max are inclusive */
-export const rand = (min: number, max: number) => Math.floor(Math.random() * ((max + 1) - min)) + min;
+import { objVals, JsType, JsTypeFind } from ".";
 
 /** A promise that waits n amount of milliseconds to execute */
 export const wait = (ms: number) => new Promise(res => setTimeout(() => res(), ms));
