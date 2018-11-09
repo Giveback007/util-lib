@@ -1,5 +1,6 @@
 import { genDictionary, removeObjKeys, objVals, typeOf } from ".";
 import { dictionary } from "./@types";
+import { nonValue } from "./general";
 
 /**
  * @param idArr Array of ids to remove. Eg: ['1']
@@ -35,3 +36,33 @@ export const arrFlatten = (arr: any[]): any[] => [].concat.apply([], arr);
 /** [[[1, [1.1]], 2, 3], [4, 5]] => [1, 1.1, 2, 3, 4, 5] */
 export const arrDeepFlatten = (arr: any[]): any[] =>
     arr.reduce((newArr: any[], x) => newArr.concat(typeOf(x, 'array') ? arrDeepFlatten(x) : x), []);
+
+export function arrReplace<T>(arr: T[]) {
+    const newArr = [ ...arr ];
+    return {
+        first: (item: T) => {
+            const idx = arr.findIndex((match) => item === match);
+            return {
+                with: (newItem: T) => {
+                    if (nonValue(idx)) return arr;
+                    
+                    newArr[idx] = newItem;
+                    return newArr;
+                }
+            }
+        },
+        all: (item: T) => {
+            const idxs: number[] = [];
+            arr.forEach((match, i) => item === match ? idxs.push(i) : null);
+
+            return {
+                with: (newItem: T) => {
+                    if (!idxs.length) return arr;
+
+                    idxs.forEach(i => newArr[i] = item);
+                    return newArr;
+                }
+            }
+        }
+    };
+}
