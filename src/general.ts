@@ -57,6 +57,8 @@ export function nullOrEmpty(x: any): boolean {
     return false;
 }
 
+export const viewSize = () => ({ width: window.innerWidth, height: window.innerHeight });
+
 // /** recursively goes over all nested values in an object and array */
 // export const recurse = (obj: {} | any[]) => ({
 //     for: (funct: (key: string) => any) => {
