@@ -7,6 +7,9 @@ export const objKeys = <T extends {}, K extends keyof T>(obj: T): K[] => Object.
 
 export const objVals = <T = any>(obj: { [key: string]: T }): T[] => objKeys(obj).map((key) => obj[key]);
 
+export const objKeyVals = <T extends {}>(obj: T) =>
+    objKeys(obj).map((key) => ({ key, val: obj[key] }))
+
 export function genDictionary<T extends anyObj>(arr: T[], idKey: string) {
     const dictionary: dictionary<T> = { };
     arr.forEach((obj) => dictionary[obj[idKey]] = obj);
