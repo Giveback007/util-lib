@@ -30,19 +30,21 @@ type xyz = { x: number, y?: number, z?: number };
 export const iterate = (xLength: number, yLength?: number, zLength?: number) => {
 
     const iterator = <T>(funct: ({ x, y, z }: xyz) => T) => {
-        const arr: T[] = [];
+        const arr1: T[]     = arrGen(xLength);
+        const arr2: T[][]   = arr1.map(() => arrGen(yLength));
+        const arr3: T[][][] = arr2.map(() => arrGen(zLength));
 
         for (let x = 0; x < xLength; x++) {
-            if (!yLength) arr.push(funct({ x }));
+            if (!yLength) arr1.push(funct({ x }));
             else for (let y = 0; y < yLength; y++) {
-                if (!zLength) arr.push(funct({ x, y }));
+                if (!zLength) arr2[x].push(funct({ x, y }));
                 else for (let z = 0; z < zLength; z++) {
-                    arr.push(funct({ x, y, z }))
+                    arr3[x][y].push(funct({ x, y, z }))
                 }
             }
         }
 
-        return arr;
+        return zLength ? arr3 : yLength ? arr2 : arr1;
     }
 
     return {
