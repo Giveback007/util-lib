@@ -1,24 +1,52 @@
-import { genDictionary, removeObjKeys, objVals, typeOf } from ".";
-import { dictionary } from "./@types";
-import { nonValue } from "./general";
+import { 
+    objRemoveKeys, objVals, isType, nonValue, type, dictionary, anyObj
+} from ".";
 
-/**
- * @param idArr Array of ids to remove. Eg: ['1']
- * @param idKey Key to the obj id prop. Eg: 'id'
- * @param objArr Array of objects. Eg: [{ id: '1' }, { id: '2' }]
- *
- * => [{ id: '2' }]
- * Removes objects from array by obj[idKey]: 'stringId'
- */
-export function arrRemoveById<T extends {}>(objArr: T[], idArr: string[], idKey: string) {
-    const objDict = genDictionary(objArr, idKey);
-    const keep: dictionary<T> = removeObjKeys(objDict, idArr);
+export function Arr<T>(a: T[]) {
+    if (!isType(a, 'array')) {
+        console.error(a, `typeOf ${type(a)}, can't be taken as a parameter`);
+        throw "Parameter is not an 'array'"
+    }
 
-    return objVals(keep);
+    return {
+        get replace() { return arrReplace(a) }, 
+
+        removeById: (idKey: string, idArr: string[]) => arrRemoveById(a, idKey, idArr),
+
+        divide: (maxRowLength: number) => arrDivide(a, maxRowLength),
+
+        flatten: () => arrFlatten(a),
+
+        deepFlatten: (): T[] => arrDeepFlatten(a),
+
+        dictionary: (idKey) => arrToDictionary(a, idKey),
+    }
 }
 
 /** Generates an array of null values */
 export const arrGen = <T = any>(length: number): T[] => Array(length).fill(null);
+
+export function arrToIdxDictionary(arr: (number | string)[]) {
+    const dictionary: dictionary<string> = { };
+    arr.forEach((x, idx) => dictionary[x] = idx + '');
+
+    return dictionary;
+}
+
+/**
+ * @param idArr Array of ids to remove. Eg: ['1']
+ * @param idKey Key to the obj id prop. Eg: 'id'
+ * @param arr Array of objects. Eg: [{ id: '1' }, { id: '2' }]
+ *
+ * => [{ id: '2' }]
+ * Removes objects from array by obj[idKey]: 'stringId'
+ */
+export function arrRemoveById<T extends {}>(arr: T[], idKey: string, idArr: string[]) {
+    const objDict = arrToDictionary(arr, idKey);
+    const keep: dictionary<T> = objRemoveKeys(objDict, idArr);
+
+    return objVals(keep);
+}
 
 /** Divides the array in to multiple arrays arr.length/rowLength */
 export function arrDivide<T>(arr: T[], maxRowLength: number): T[][] {
@@ -35,7 +63,7 @@ export const arrFlatten = (arr: any[]): any[] => [].concat.apply([], arr);
 
 /** [[[1, [1.1]], 2, 3], [4, 5]] => [1, 1.1, 2, 3, 4, 5] */
 export const arrDeepFlatten = (arr: any[]): any[] =>
-    arr.reduce((newArr: any[], x) => newArr.concat(typeOf(x, 'array') ? arrDeepFlatten(x) : x), []);
+    arr.reduce((newArr: any[], x) => newArr.concat(isType(x, 'array') ? arrDeepFlatten(x) : x), []);
 
 export function arrReplace<T>(arr: T[]) {
     const newArr = [ ...arr ];
@@ -65,4 +93,11 @@ export function arrReplace<T>(arr: T[]) {
             }
         }
     };
+}
+
+export function arrToDictionary<T extends anyObj>(arr: T[], idKey: string) {
+    const dictionary: dictionary<T> = { };
+    arr.forEach((obj) => dictionary[obj[idKey]] = obj);
+
+    return dictionary;
 }

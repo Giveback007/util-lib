@@ -1,11 +1,11 @@
-import { typeOf, genIdxDictionary } from ".";
+import { isType, arrToIdxDictionary } from ".";
 
 /** Generate a random number between min and max, min and max are inclusive */
 export const rand = (min: number, max: number) => Math.floor(Math.random() * ((max + 1) - min)) + min;
 
 /** Takes a number || number[] and maxIdx, will generate a new random idx */
 export function newRandIdx(prevIdx: number | number[], maxIdx: number) {
-    let dict = typeOf(prevIdx, 'array') ? genIdxDictionary(prevIdx) : null;
+    let dict = isType(prevIdx, 'array') ? arrToIdxDictionary(prevIdx) : null;
     let num = -1;
     let loop = 0;
 
@@ -23,7 +23,7 @@ export function newRandIdx(prevIdx: number | number[], maxIdx: number) {
 
 /** Takes a number || number[] and min & max, will generate a new random number */
 export function newNumFromRange(preNum: number | number[], min: number, max: number) {
-    let dict = typeOf(preNum, 'array') ? genIdxDictionary(preNum) : null;
+    let dict = isType(preNum, 'array') ? arrToIdxDictionary(preNum) : null;
     let num = -1;
     let loop = 0;
 
