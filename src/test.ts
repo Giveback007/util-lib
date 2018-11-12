@@ -8,7 +8,7 @@ const testsInit = (val: any) => ({
     nullOrEmpty: (bool: boolean) => nullOrEmpty(val) === bool,
 });
 
-/** Must pass all tests to to return true */
+/** Must pass all tests to return true */
 export function test(params: TestParams) {
     const testsKeys = objKeys(params);
 

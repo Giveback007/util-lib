@@ -9,16 +9,10 @@ export function Arr<T>(a: T[]) {
     }
 
     return {
-        get replace() { return arrReplace(a) }, 
-
+        get replace() { return arrReplace(a) },
         removeById: (idKey: string, idArr: string[]) => arrRemoveById(a, idKey, idArr),
-
         divide: (maxRowLength: number) => arrDivide(a, maxRowLength),
-
-        flatten: () => arrFlatten(a),
-
-        deepFlatten: (): T[] => arrDeepFlatten(a),
-
+        flatten: <U = any>({ deep } = { deep: true }): U[] => deep ? arrDeepFlatten(a) : arrFlatten(a),
         dictionary: (idKey) => arrToDictionary(a, idKey),
     }
 }
