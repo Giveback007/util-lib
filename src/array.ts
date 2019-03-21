@@ -45,7 +45,7 @@ export function arrRemoveById<T extends {}>(arr: T[], idKey: string, idArr: stri
 /** Divides the array in to multiple arrays arr.length/rowLength */
 export function arrDivide<T>(arr: T[], maxRowLength: number): T[][] {
     const rows = Math.ceil(arr.length / maxRowLength);
-    const newArr = arrGen(rows).map(() => []);
+    const newArr = arrGen(rows).map(() => ([] as T[]));
 
     arr.forEach((x, i) => newArr[Math.floor(i / maxRowLength)].push(x));
 
