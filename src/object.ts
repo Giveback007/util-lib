@@ -31,7 +31,7 @@ export function Obj<
             return vals;
         },
 
-        extract: (keys: K[]): { [P in K]: O[P]; } => objExtract(o, keys),
+        extract: (k: K[]): { [P in K]: O[P]; } => objExtract(o, k),
         filter: (funct: (keyVal: { key: sKeys<O>; val: O[sKeys<O>]; }) => boolean) => objFilter(o, funct),
         map: <T>(funct: (keyVal: { key: sKeys<O>; val: O[sKeys<O>]; }) => T) => objMap(o, funct),
         removeKeys: (filterOut: K[]): { [L in Exclude<keyof O, K>]: O[L]; } => objRemoveKeys(o, filterOut),
