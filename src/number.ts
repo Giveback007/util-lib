@@ -1,11 +1,11 @@
-import { isType, arrToIdxDictionary } from ".";
+import { arrToIdxDictionary, isType } from '.';
 
 /** Generate a random number between min and max, min and max are inclusive */
 export const rand = (min: number, max: number) => Math.floor(Math.random() * ((max + 1) - min)) + min;
 
 /** Takes a number || number[] and maxIdx, will generate a new random idx */
 export function newRandIdx(prevIdx: number | number[], maxIdx: number) {
-    let dict = isType(prevIdx, 'array') ? arrToIdxDictionary(prevIdx) : null;
+    const dict = isType(prevIdx, 'array') ? arrToIdxDictionary(prevIdx) : null;
     let num = -1;
     let loop = 0;
 
@@ -14,16 +14,16 @@ export function newRandIdx(prevIdx: number | number[], maxIdx: number) {
         loop++;
         if (loop > 10000) {
             console.error('Check for infinite loop');
-            throw 'Looped 10k times';
+            throw new Error('Looped 10k times');
         }
     } while (prevIdx === num || dict && dict[num]);
-    
+
     return num;
 }
 
 /** Takes a number || number[] and min & max, will generate a new random number */
 export function newNumFromRange(preNum: number | number[], min: number, max: number) {
-    let dict = isType(preNum, 'array') ? arrToIdxDictionary(preNum) : null;
+    const dict = isType(preNum, 'array') ? arrToIdxDictionary(preNum) : null;
     let num = -1;
     let loop = 0;
 
@@ -32,9 +32,9 @@ export function newNumFromRange(preNum: number | number[], min: number, max: num
         loop++;
         if (loop > 10000) {
             console.error('Check for infinite loop');
-            throw 'Looped 10k times';
+            throw new Error('Looped 10k times');
         }
     } while (preNum === num || dict && dict[num]);
-    
+
     return num;
 }

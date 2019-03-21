@@ -1,30 +1,30 @@
-import { 
-    objRemoveKeys, objVals, isType, nonValue, type, dictionary, anyObj
-} from ".";
+import {
+    anyObj, dictionary, isType, nonValue, objRemoveKeys, objVals, type,
+} from '.';
 
 export function Arr<T>(a: T[]) {
     if (!isType(a, 'array')) {
         console.error(a, `typeOf ${type(a)}, can't be taken as a parameter`);
-        throw "Parameter is not an 'array'"
+        throw new Error('Parameter is not an \'array\'');
     }
 
     return {
-        get replace() { return arrReplace(a) },
-        removeById: (idKey: string, idArr: string[]) => arrRemoveById(a, idKey, idArr),
+        get replace() { return arrReplace(a); },
+        dictionary: (idKey: string) => arrToDictionary(a, idKey),
         divide: (maxRowLength: number) => arrDivide(a, maxRowLength),
         flatten: <U = any>({ deep } = { deep: true }): U[] => deep ? arrDeepFlatten(a) : arrFlatten(a),
-        dictionary: (idKey) => arrToDictionary(a, idKey),
-    }
+        removeById: (idKey: string, idArr: string[]) => arrRemoveById(a, idKey, idArr),
+    };
 }
 
 /** Generates an array of null values */
 export const arrGen = <T = any>(length: number): T[] => Array(length).fill(null);
 
-export function arrToIdxDictionary(arr: (number | string)[]) {
-    const dictionary: dictionary<string> = { };
-    arr.forEach((x, idx) => dictionary[x] = idx + '');
+export function arrToIdxDictionary(arr: Array<number | string>) {
+    const dict: dictionary<string> = { };
+    arr.forEach((x, idx) => dict[x] = idx + '');
 
-    return dictionary;
+    return dict;
 }
 
 /**
@@ -62,36 +62,36 @@ export const arrDeepFlatten = (arr: any[]): any[] =>
 export function arrReplace<T>(arr: T[]) {
     const newArr = [ ...arr ];
     return {
-        first: (item: T) => {
-            const idx = arr.findIndex((match) => item === match);
-            return {
-                with: (newItem: T) => {
-                    if (nonValue(idx)) return arr;
-                    
-                    newArr[idx] = newItem;
-                    return newArr;
-                }
-            }
-        },
         all: (item: T) => {
             const idxs: number[] = [];
             arr.forEach((match, i) => item === match ? idxs.push(i) : null);
 
             return {
-                with: (newItem: T) => {
+                with: (_newItem: T) => {
                     if (!idxs.length) return arr;
 
-                    idxs.forEach(i => newArr[i] = item);
+                    idxs.forEach((i) => newArr[i] = item);
                     return newArr;
-                }
-            }
-        }
+                },
+            };
+        },
+        first: (item: T) => {
+            const idx = arr.findIndex((match) => item === match);
+            return {
+                with: (newItem: T) => {
+                    if (nonValue(idx)) return arr;
+
+                    newArr[idx] = newItem;
+                    return newArr;
+                },
+            };
+        },
     };
 }
 
 export function arrToDictionary<T extends anyObj>(arr: T[], idKey: string) {
-    const dictionary: dictionary<T> = { };
-    arr.forEach((obj) => dictionary[obj[idKey]] = obj);
+    const dict: dictionary<T> = { };
+    arr.forEach((obj) => dict[obj[idKey]] = obj);
 
-    return dictionary;
+    return dict;
 }

@@ -1,14 +1,14 @@
-import { JsType } from ".";
+import { JsType } from '.';
 
 /** A promise that waits n amount of milliseconds to execute */
-export const wait = (ms: number) => new Promise(res => setTimeout(() => res(), ms));
+export const wait = (ms: number) => new Promise((res) => setTimeout(() => res(), ms));
 
 /**
  * An alternative to console.log in that it will clone the obj.
- * 
+ *
  * Useful for when need to see the object in a specific state instance.
- * */
-export const cloneLog = (x) => window.console.log(clone(x));
+ */
+export const cloneLog = (x: any) => window.console.log(clone(x));
 
 /** Creates a copy of the object trough JSON stringify and parse */
 export const clone = <T>(obj: T) => JSON.parse(JSON.stringify(obj));
