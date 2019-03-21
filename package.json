@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "publish": "del dist /s /f /q && npm run lint && npm run build && npm publish",
+    "publish-script": "del dist /s /f /q && npm run lint && npm run build && npm publish",
     "build": "tsc",
     "lint": "tslint 'src/**/*.{ts,tsx}'"
   },
