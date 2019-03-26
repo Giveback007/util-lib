@@ -25,18 +25,25 @@ export function test(params: TestParams) {
 }
 */
 
-/** Checks if object has the key, made as a function for type transfer */
+/**
+ * Checks if object has the key, made as a function for type transfer.
+ *
+ * Uses `obj.hasOwnProperty(key)` instead of `key in obj`
+ *
+ * https://stackoverflow.com/questions/13632999/if-key-in-object-or-ifobject-hasownpropertykey
+ */
 export const hasKey = <
     K extends (string | number)
->(obj: any, key: K): obj is { [P in K]: any } => isType(obj, 'object') && key in obj;
+>(obj: any, key: K): obj is { [P in K]: any } => isType(obj, 'object') && obj.hasOwnProperty(key);
 
+/** Checks if object has keys from an array of keys, made as a function for type transfer */
 export function hasKeys<
   K extends (string | number)
 >(obj: any, keys: K[]): obj is { [P in K]: any } {
   if (!isType(obj, 'object')) return false;
 
   for (const key of keys)
-    if (!(key in obj)) return false;
+    if (!obj.hasOwnProperty(key)) return false;
 
   return true;
 }
