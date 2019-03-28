@@ -16,35 +16,53 @@ export function timeString(dt = new Date()) {
     return `${h}:${m}:${s}:${ms}`;
 }
 
-export function logNodeErr(e: any) {
-    const err = e instanceof Error ? e : new Error(e);
+/**
+ * Make sure to escape the slashes
+ * @param srcFolder - eg: '/src/'
+ */
+export const logNodeErrInit = (srcFolder: string) => (e: any) => {
+    const src = srcFolder.replace(/[/]/g, '\\');
+    const stack = parseStack(Error()); stack.shift();
 
     console.log(
         colors.red('Err: ' + timeString() + ' || '),
         e.stack ? e.message : e,
     );
 
+    console.group();
+
+    // *** console.groupCollapsed(); ***
+    // *** console.group(); ***
     // -- Stack Trace -- //
-    parseStack(err).forEach((x, i) => {
+    stack.forEach((x, i) => {
         const name = x.getFileName();
         const col = x.getColumnNumber();
         const line = x.getLineNumber();
 
-        let srcIdx = name.indexOf('\\src');
-        srcIdx = srcIdx !== -1 ? srcIdx + 1 : 0;
+        if (!name) return console.log(
+            colors.red((`   ${i}:`).slice(-4)),
+            colors.grey(x.getFunctionName()),
+        );
+
+        let isSrc = false;
+        let idx = name.indexOf('\\node_modules');
+
+        if (idx === -1) {
+            const srcIdx = name.indexOf(src);
+            isSrc = srcIdx !== -1;
+            idx = isSrc ? srcIdx + 1 : 0;
+        } else idx++;
 
         console.log(
-            colors[srcIdx ? 'cyan' : 'red']((`   ${i}:`).slice(-4)),
-            colors[srcIdx ? 'white' : 'grey'](name.substr(srcIdx)) + ':' + colors.blue(line + ':' + col),
+            colors[isSrc ? 'cyan' : 'red']((`   ${i}:`).slice(-4)),
+            colors[isSrc ? 'white' : 'grey'](name.substr(idx)) + ':' + colors.blue(line + ':' + col),
         );
     });
-}
 
-export const logNoteUtil = (x: any) => {
-    const isString = x instanceof String;
-
-    const message = colors.cyan('Log: ' + timeString() + ' || ' + isString ? x : '');
-    const arr = isString ? [message] : [message, x];
-
-    console.log(...arr);
+    console.groupEnd();
 };
+
+export const logNoteUtil: Console['log'] = (() => {
+    const context = colors.cyan('Log: ' + timeString() + ' ||');
+    return Function.prototype.bind.call(console.log, console, context);
+})();
