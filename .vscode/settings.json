@@ -6,7 +6,8 @@
         "dovy",
         "funct",
         "gmail",
-        "idxs"
+        "idxs",
+        "tslib"
     ],
     "typescript.tsdk": "node_modules\\typescript\\lib",
     "tslint.alwaysShowRuleFailuresAsWarnings": true,
