@@ -3,6 +3,7 @@ import 'source-map-support/register';
 
 import colors = require('colors/safe');
 import { parse as parseStack } from 'stack-trace';
+import { type } from './general';
 
 /**
  * @param dt instance of Date obj
@@ -26,7 +27,7 @@ export const logNodeErrInit = (srcFolder: string) => (e: any) => {
 
     console.log(
         colors.red('Err: ' + timeString() + ' || '),
-        e.stack ? e.message : e,
+        type(e) === 'object' && e.stack ? e.message : e,
     );
 
     console.group();
