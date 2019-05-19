@@ -1,5 +1,5 @@
 import { anyObj, isType, type } from '.';
-import { sKeys } from './@types';
+import { omit, sKeys } from './@types';
 
 export function Obj<
     V,
@@ -68,7 +68,7 @@ export function objRemoveKeys<T extends {}, K extends keyof T>(obj: T, filterOut
     const newObj: T = { ...obj as any };
     filterOut.forEach((key) => delete newObj[key]);
 
-    return newObj as { [L in Exclude<keyof T, K>]: T[L] };
+    return newObj as omit<T, K>;
 }
 
 export function objKeys<T extends {}>(o: T): Array<sKeys<T>> {

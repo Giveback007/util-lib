@@ -1,9 +1,7 @@
-import 'source-map-support/register';
+import { StackFrame } from 'stack-trace';
 // -- SOURCE MAP SUPPORT FOR STACK TRACES -- //
 
 import colors = require('colors/safe');
-import { parse as parseStack } from 'stack-trace';
-import { type } from './general';
 
 /**
  * @param dt instance of Date obj
@@ -17,51 +15,69 @@ export function timeString(dt = new Date()) {
     return `${h}:${m}:${s}:${ms}`;
 }
 
+let logNodeErrInitExportable: (srcFolder: string) => (e: any) => void =
+    (_x) => (_y) => undefined;
+
+if (typeof window === 'undefined') {
+    // tslint:disable-next-line: no-var-requires
+    require('source-map-support').install({ environment: 'node' });
+    // tslint:disable-next-line: no-var-requires
+    const { parse: parseStack } = require('stack-trace');
+
 /**
  * Make sure to escape the slashes
  * @param srcFolder - eg: '/src/'
  */
-export const logNodeErrInit = (srcFolder: string) => (e: any) => {
-    const src = srcFolder.replace(/[/]/g, '\\');
-    const stack = parseStack(Error()); stack.shift();
+    logNodeErrInitExportable = (srcFolder: string) => (e: any) => {
+        const src = srcFolder.replace(/[/]/g, '\\');
 
-    console.log(
-        colors.red('Err: ' + timeString() + ' || '),
-        type(e) === 'object' && e.stack ? e.message : e,
-    );
+        const { stack, message } = (() => {
+            let m: any;
+            let s: StackFrame[];
 
-    console.group();
+            if (e instanceof Error) {
+                m = e.message;
+                s = parseStack(e);
+            } else {
+                m = e;
+                s = parseStack(Error());
+                s.shift();
+            }
 
-    // *** console.groupCollapsed(); ***
-    // *** console.group(); ***
-    // -- Stack Trace -- //
-    stack.forEach((x, i) => {
-        const name = x.getFileName();
-        const col = x.getColumnNumber();
-        const line = x.getLineNumber();
+            return { stack: s, message: m };
+        })();
 
-        if (!name) return console.log(
-            colors.red((`   ${i}:`).slice(-4)),
-            colors.grey(x.getFunctionName()),
-        );
+        console.log(colors.red('Err: ' + timeString() + ' || '), message);
 
-        let isSrc = false;
-        let idx = name.indexOf('\\node_modules');
+        // -- Stack Trace -- //
+        stack.forEach((x, i) => {
+            const name = x.getFileName();
+            const col = x.getColumnNumber();
+            const line = x.getLineNumber();
 
-        if (idx === -1) {
-            const srcIdx = name.indexOf(src);
-            isSrc = srcIdx !== -1;
-            idx = isSrc ? srcIdx + 1 : 0;
-        } else idx++;
+            if (!name) return console.log(
+                colors.red((`   ${i}:`).slice(-4)),
+                colors.grey(x.getFunctionName()),
+            );
 
-        console.log(
-            colors[isSrc ? 'cyan' : 'red']((`   ${i}:`).slice(-4)),
-            colors[isSrc ? 'white' : 'grey'](name.substr(idx)) + ':' + colors.blue(line + ':' + col),
-        );
-    });
+            let isSrc = false;
+            let idx = name.indexOf('\\node_modules');
 
-    console.groupEnd();
-};
+            if (idx === -1) {
+                const srcIdx = name.indexOf(src);
+                isSrc = srcIdx !== -1;
+                idx = isSrc ? srcIdx + 1 : 0;
+            } else idx++;
+
+            console.log(
+                colors[isSrc ? 'cyan' : 'red']((`   ${i}:`).slice(-4)),
+                colors[isSrc ? 'white' : 'grey'](name.substr(idx)) + ':' + colors.blue(line + ':' + col),
+            );
+        });
+    };
+}
+
+export const logNodeErrInit = logNodeErrInitExportable;
 
 export const logNoteUtil: Console['log'] = (() => {
     const context = colors.cyan('Log: ' + timeString() + ' ||');

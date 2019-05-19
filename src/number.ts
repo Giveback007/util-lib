@@ -1,5 +1,17 @@
 import { arrToIdxDictionary, isType } from '.';
 
+/** Gives time in milliseconds */
+export const seconds = (s: number) => s * 1000;
+
+/** Gives time in milliseconds */
+export const minutes = (m: number) => m * 60000;
+
+/** Gives time in milliseconds */
+export const hours = (h: number) => h * 3600000;
+
+/** Gives time in milliseconds */
+export const days = (d: number) => d * hours(24);
+
 /** Generate a random number between min and max, min and max are inclusive */
 export const rand = (min: number, max: number) => Math.floor(Math.random() * ((max + 1) - min)) + min;
 

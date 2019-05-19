@@ -5,6 +5,8 @@ export type dictionary<T> = { [id: string]: T };
 /** string type keyof T */
 export type sKeys<T> = Extract<keyof T, string>;
 
+export type omit<T, K> = Pick<T, Exclude<keyof T, K>>;
+
 export type JsType =
     | 'array'
     | 'bigint'

@@ -1,6 +1,6 @@
 {
   "name": "@giveback007/util-lib",
-  "version": "0.6.12",
+  "version": "0.7.14",
   "description": "Small util function library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -34,11 +34,13 @@
     "tslib": "1.9.3"
   },
   "devDependencies": {
+    "@types/node": "^12.0.2",
+    "@types/source-map-support": "^0.5.0",
     "@types/stack-trace": "0.0.29",
     "concurrently": "4.1.0",
     "nodemon": "1.18.10",
+    "tslint": "^5.16.0",
     "tslint-config-prettier": "^1.18.0",
-    "tslint": "^5.15.0",
     "typescript": "^3.4.1"
   },
   "nodemonConfig": {
