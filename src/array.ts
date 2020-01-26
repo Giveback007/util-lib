@@ -5,7 +5,7 @@ import {
 /** Generates an array of null values */
 export const arrGen = <T = any>(length: number): T[] => Array(length).fill(null);
 
-export function arrToIdxDictionary(arr: (number | string)[]) {
+export function arrToIdxDict(arr: (number | string)[]) {
     const dict: dictionary<string> = { };
     arr.forEach((x, idx) => dict[x] = idx + '');
 
@@ -21,7 +21,7 @@ export function arrToIdxDictionary(arr: (number | string)[]) {
  * Removes objects from array by obj[idKey]: 'stringId'
  */
 export function arrRemoveById<T extends {}>(arr: T[], idKey: string, idArr: string[]) {
-    const objDict = arrToDictionary(arr, idKey);
+    const objDict = arrToDict(arr, idKey);
     const keep: dictionary<T> = objRemoveKeys(objDict, idArr);
 
     return objVals(keep);
@@ -74,9 +74,25 @@ export function arrReplace<T>(arr: T[]) {
     };
 }
 
-export function arrToDictionary<T extends anyObj>(arr: T[], idKey: string) {
+export function arrToDict<T extends anyObj>(arr: T[], idKey: string) {
     const dict: dictionary<T> = { };
     arr.forEach((obj) => dict[obj[idKey]] = obj);
 
     return dict;
+}
+
+export function arrToBoolDict(arr: (string | number)[]) {
+    const dict: dictionary<boolean> = { };
+    arr.forEach((x) => dict[x] = true);
+
+    return dict;
+}
+
+export function arrRemoveValues<T>(arr: T[], valsToRemove: T[]) {
+    let newArr = [ ...arr ];
+    valsToRemove.forEach(removeVal => {
+        newArr = newArr.filter(x => x !== removeVal);
+    });
+
+    return newArr;
 }

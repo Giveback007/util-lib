@@ -1,11 +1,12 @@
 {
   "name": "@giveback007/util-lib",
-  "version": "0.8.1",
+  "version": "0.9.1",
   "description": "Small util function library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "publish-script": "del dist /s /f /q && npm run lint && npm run build && npm publish",
+    "test": "jest",
     "build": "tsc",
     "lint": "tslint 'src/**/*.{ts,tsx}'",
     "playground": "playground-start",
@@ -30,16 +31,18 @@
   "dependencies": {
     "colors": "^1.4.0",
     "source-map-support": "^0.5.16",
-    "stack-trace": "^0.0.10",
-    "tslib": "^1.10.0"
+    "stack-trace": "^0.0.10"
   },
   "devDependencies": {
+    "@types/jest": "^24.9.1",
     "@types/node": "^13.5.0",
     "@types/source-map-support": "^0.5.1",
     "@types/stack-trace": "^0.0.29",
     "concurrently": "^5.0.2",
     "jest": "^25.1.0",
     "nodemon": "^2.0.2",
+    "ts-jest": "^25.0.0",
+    "tslib": "^1.10.0",
     "tslint": "^6.0.0",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.7.5"
