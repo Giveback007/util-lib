@@ -1,12 +1,9 @@
-import * as utils from '../src/array';
-// import { type } from '../src';
-const { arrGen } = utils;
+import { arrGen, objMap } from '../src';
 
-// check if each function has a corresponding test
-
-describe('array.test', () => {
-    test('arrGen(3) => [null, null, null]', () => {
+export const tests = {
+    arrGen: () => test('arrGen(3) => [null, null, null]', () => {
         expect(arrGen(3)).toEqual([null, null, null]);
-    });
-})
+    }),
+}
 
+objMap(tests, ({ val: funct }) => funct());

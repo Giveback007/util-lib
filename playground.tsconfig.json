@@ -22,5 +22,9 @@
     },
     "files": [
         "./playground/index.ts"
+    ],
+    "exclude": [
+        "./playground/dist/"
     ]
+    
 }
