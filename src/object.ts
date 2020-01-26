@@ -1,43 +1,5 @@
-import { anyObj, isType, type } from '.';
+import { anyObj } from '.';
 import { omit, sKeys } from './@types';
-
-export function Obj<
-    V,
-    O extends { [key: string]: V },
-    K extends sKeys<O>
->(o: O) {
-    if (!isType(o, 'object')) {
-        console.error(o, `typeOf ${type(o)}, can't be taken as a parameter`);
-        throw new Error('Parameter is not an \'object\'');
-    }
-
-    let keys: Array<sKeys<O>>;
-    let vals: V[];
-    let keyVals: Array<{ key: sKeys<O>; val: O[sKeys<O>]; }>;
-
-    return {
-        get keys() {
-            if (!keys) keys = objKeys(o);
-            return keys;
-        },
-
-        get keyVals() {
-            if (!keyVals) keyVals = objKeyVals(o);
-            return keyVals;
-        },
-
-        get vals() {
-            if (!vals) vals = objVals(o);
-            return vals;
-        },
-
-        extract: (k: K[]): { [P in K]: O[P]; } => objExtract(o, k),
-        filter: (funct: (keyVal: { key: sKeys<O>; val: O[sKeys<O>]; }) => boolean) => objFilter(o, funct),
-        map: <T>(funct: (keyVal: { key: sKeys<O>; val: O[sKeys<O>]; }) => T) => objMap(o, funct),
-        removeKeys: (filterOut: K[]): { [L in Exclude<keyof O, K>]: O[L]; } => objRemoveKeys(o, filterOut),
-        resolveObj: (path: string): any => objResolve(o, path),
-    };
-}
 
 /** Maps over an object just as a [].map would */
 export function objMap<
@@ -92,7 +54,7 @@ export function objExtract<
     U extends { [P in K]: T[P] }
 >(extract: T, keys: K[]) {
     const newObj = { } as U;
-    keys.forEach((key) => (newObj[key] as T[K]) = extract[key] );
+    keys.forEach((key) => (newObj[key] as any as T[K]) = extract[key]);
 
     return newObj;
 }

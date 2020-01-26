@@ -1,30 +1,5 @@
 import { JsType, JsTypeFind, objVals, type } from '.';
 
-/*
-const testsInit = (val: any) => ({
-    hesKey: (key: string) => hasKey(val, key),
-    isType: (tesType: JsType) => isType(val, tesType),
-    nonValue: (bool: boolean) => nonValue(val) === bool,
-    nullOrEmpty: (bool: boolean) => nullOrEmpty(val) === bool,
-    objOrArr: (bool: boolean) => isObjOrArr(val) === bool,
-});
-
-// Must pass all tests to return true
-export function test(params: TestParams) {
-    const testsKeys = objKeys(params);
-
-    return (val: any) => {
-        const tests = testsInit(val);
-
-        for (const t in testsKeys) {
-            if (tests[t]((params[t]))) return false;
-        }
-
-        return true;
-    };
-}
-*/
-
 /**
  * Checks if object has the key, made as a function for type transfer.
  *

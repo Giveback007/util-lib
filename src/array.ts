@@ -1,26 +1,11 @@
 import {
-    anyObj, dictionary, isType, nonValue, objRemoveKeys, objVals, type,
+    anyObj, dictionary, isType, nonValue, objRemoveKeys, objVals,
 } from '.';
-
-export function Arr<T>(a: T[]) {
-    if (!isType(a, 'array')) {
-        console.error(a, `typeOf ${type(a)}, can't be taken as a parameter`);
-        throw new Error('Parameter is not an \'array\'');
-    }
-
-    return {
-        get replace() { return arrReplace(a); },
-        dictionary: (idKey: string) => arrToDictionary(a, idKey),
-        divide: (maxRowLength: number) => arrDivide(a, maxRowLength),
-        flatten: <U = any>({ deep } = { deep: true }): U[] => deep ? arrDeepFlatten(a) : arrFlatten(a),
-        removeById: (idKey: string, idArr: string[]) => arrRemoveById(a, idKey, idArr),
-    };
-}
 
 /** Generates an array of null values */
 export const arrGen = <T = any>(length: number): T[] => Array(length).fill(null);
 
-export function arrToIdxDictionary(arr: Array<number | string>) {
+export function arrToIdxDictionary(arr: (number | string)[]) {
     const dict: dictionary<string> = { };
     arr.forEach((x, idx) => dict[x] = idx + '');
 
