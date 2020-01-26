@@ -33,10 +33,10 @@ export function objRemoveKeys<T extends {}, K extends keyof T>(obj: T, filterOut
     return newObj as omit<T, K>;
 }
 
-export function objKeys<T extends {}>(o: T): Array<sKeys<T>> {
-    if (Object.keys) return Object.keys(o) as Array<sKeys<T>>;
+export function objKeys<T extends {}>(o: T): sKeys<T>[] {
+    if (Object.keys) return Object.keys(o) as sKeys<T>[];
 
-    const keys: Array<sKeys<T>> = [];
+    const keys: sKeys<T>[] = [];
     for (const k in o) keys.push(k);
 
     return keys;
