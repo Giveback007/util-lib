@@ -5,13 +5,6 @@ import {
 /** Generates an array of null values */
 export const arrGen = <T = any>(length: number): T[] => Array(length).fill(null);
 
-export function arrToIdxDict(arr: (number | string)[]) {
-    const dict: dictionary<string> = { };
-    arr.forEach((x, idx) => dict[x] = idx + '');
-
-    return dict;
-}
-
 /**
  * @param idArr Array of ids to remove. Eg: ['1']
  * @param idKey Key to the obj id prop. Eg: 'id'
@@ -45,22 +38,23 @@ export const arrDeepFlatten = (arr: any[]): any[] =>
     arr.reduce((newArr: any[], x) => newArr.concat(isType(x, 'array') ? arrDeepFlatten(x) : x), []);
 
 export function arrReplace<T>(arr: T[]) {
-    const newArr = [ ...arr ];
     return {
         all: (item: T) => {
+            const newArr = [ ...arr ];
             const idxs: number[] = [];
             arr.forEach((match, i) => item === match ? idxs.push(i) : null);
 
             return {
-                with: (_newItem: T) => {
+                with: (newItem: T) => {
                     if (!idxs.length) return arr;
 
-                    idxs.forEach((i) => newArr[i] = item);
+                    idxs.forEach((i) => newArr[i] = newItem);
                     return newArr;
                 },
             };
         },
         first: (item: T) => {
+            const newArr = [ ...arr ];
             const idx = arr.findIndex((match) => item === match);
             return {
                 with: (newItem: T) => {
@@ -74,9 +68,25 @@ export function arrReplace<T>(arr: T[]) {
     };
 }
 
+export function arrRemoveValues<T>(arr: T[], valsToRemove: T[]) {
+    let newArr = [ ...arr ];
+    valsToRemove.forEach(removeVal => {
+        newArr = newArr.filter(x => x !== removeVal);
+    });
+
+    return newArr;
+}
+
 export function arrToDict<T extends anyObj>(arr: T[], idKey: string) {
     const dict: dictionary<T> = { };
     arr.forEach((obj) => dict[obj[idKey]] = obj);
+
+    return dict;
+}
+
+export function arrToIdxDict(arr: (number | string)[]) {
+    const dict: dictionary<string> = { };
+    arr.forEach((x, idx) => dict[x] = idx + '');
 
     return dict;
 }
@@ -86,13 +96,4 @@ export function arrToBoolDict(arr: (string | number)[]) {
     arr.forEach((x) => dict[x] = true);
 
     return dict;
-}
-
-export function arrRemoveValues<T>(arr: T[], valsToRemove: T[]) {
-    let newArr = [ ...arr ];
-    valsToRemove.forEach(removeVal => {
-        newArr = newArr.filter(x => x !== removeVal);
-    });
-
-    return newArr;
 }

@@ -79,3 +79,4 @@ export function iterate(xLength: number, yLength?: number, zLength?: number) {
         nestedMap: <T>(funct: (idxs: any) => T) => iterator(funct, true),
     };
 }
+// console.log(iterate(3, 3, 3).nestedMap(({ x, y, z }) => `x${x} y${y} z${z}`));

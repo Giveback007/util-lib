@@ -8,7 +8,7 @@ export const wait = (ms: number) => new Promise((res) => setTimeout(() => res(),
  *
  * Useful for when need to see the object in a specific state instance.
  */
-export const cloneLog = (x: any) => window.console.log(clone(x));
+export const cloneLog = (x: any) => console.log(clone(x));
 
 /** Creates a copy of the object trough JSON stringify and parse */
 export const clone = <T>(obj: T) => JSON.parse(JSON.stringify(obj));
