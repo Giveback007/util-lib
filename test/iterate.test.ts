@@ -1,7 +1,8 @@
-import { objMap } from "../src";
+import { objMap } from '../src';
 
 const tests = {
     iterate: () => test('', () => {
+        // x, y, z
         throw 'not implemneted';
     })
 }

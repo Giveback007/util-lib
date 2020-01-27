@@ -23,7 +23,7 @@ const typeTests: [any, JsType][] = [
     [null, 'null'],
     [42, 'number'],
     [{}, 'object'],
-    ['str', 'string'],
+    ['"str"', 'string'],
     [Symbol(), 'symbol'],
     [undefined, 'undefined']
 ]

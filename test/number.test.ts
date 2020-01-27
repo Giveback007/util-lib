@@ -1,4 +1,4 @@
-import { objMap, rand } from "../src";
+import { objMap, rand } from '../src';
 
 const tests = {
     rand: () => test('rand(-2, 6) => (n >= -2 && n <= 6)', () => {

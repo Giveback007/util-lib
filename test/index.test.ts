@@ -2,7 +2,7 @@ import { readdirSync } from 'fs';
 import { arrRemoveValues, arrToBoolDict } from '../src';
 
 const testFiles = readdirSync('./test');
-const srcFiles = arrRemoveValues(readdirSync('./src'), ['@types.ts']);
+const srcFiles = arrRemoveValues(readdirSync('./src'), ['@types.ts', 'log.ts']);
 
 const testFileDict = arrToBoolDict(testFiles);
 

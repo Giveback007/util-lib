@@ -1,4 +1,4 @@
-import { objMap, seconds, minutes, hours, days } from "../src";
+import { objMap, seconds, minutes, hours, days } from '../src';
 
 export const tests = {
     seconds: () => test('', () => {

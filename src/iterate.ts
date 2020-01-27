@@ -18,7 +18,7 @@ type xyz = { x: number, y: number, z: number };
  *
  * { 2, 2, 0 } ... { 2, 2, 1 } ... { 2, 2, 2 } <- last object
  *
- * Starting index is always 0
+ * Starting index is 0
  */
 export function iterate(xLength: number): {
     for: (funct: ({ x }: x) => any) => void;
@@ -40,29 +40,35 @@ export function iterate(xLength: number, yLength?: number, zLength?: number): {
 
 export function iterate(xLength: number, yLength?: number, zLength?: number) {
 
-    const iterator = <T>(funct: (idxs: xyz) => T, nested = false) => {
+    const iterator = <T>(funct: (idxs: x | xy | xyz) => T, nested = false) => {
         const arr: T[] = [];
 
         // xLength ->
         // tslint:disable-next-line: no-shadowed-variable
         for (let x = 0; x < xLength; x++) {
-            if (!yLength) arr.push(funct({ x } as any));
+            if (!yLength) arr.push(funct({ x }));
+
             // yLength ->
-            else { for (let y = 0; y < yLength; y++) {
-                if (!zLength) arr.push(funct({ x, y } as any));
+            else for (let y = 0; y < yLength; y++) {
+                if (!zLength) arr.push(funct({ x, y }));
+
                 // zLength ->
                 else for (let z = 0; z < zLength; z++) {
                     arr.push(funct({ x, y, z }));
                 }
             }
-            }
         }
 
         if (!nested) return arr;
 
-        let value: any = yLength ? arrDivide(arr, yLength) : arr;
-        value = zLength ? value.map((item: any) => arrDivide(item, zLength)) : value;
-        return value as T[][] | T[][][];
+        if (zLength && yLength) {
+            const newArr =  arrDivide(arr, yLength * zLength);
+            return newArr.map((yArr) => arrDivide(yArr, zLength))
+        } else if (yLength) {
+            return arrDivide(arr, yLength);
+        } else {
+            return arr;
+        }
     };
 
     return {
