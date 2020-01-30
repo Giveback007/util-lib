@@ -1,5 +1,5 @@
 import { anyObj } from '.';
-import { omit, sKeys } from './@types';
+import { Omit, sKeys } from './@types';
 
 /** Maps over an object just as a [].map would */
 export function objMap<
@@ -30,7 +30,7 @@ export function objRemoveKeys<T extends {}, K extends keyof T>(obj: T, filterOut
     const newObj: T = { ...obj as any };
     filterOut.forEach((key) => delete newObj[key]);
 
-    return newObj as omit<T, K>;
+    return newObj as Omit<T, K>;
 }
 
 export function objKeys<T extends {}>(o: T): sKeys<T>[] {

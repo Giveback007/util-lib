@@ -13,7 +13,8 @@
         "forin": false,
         "ban-types": false,
         "interface-name": false,
-        "variable-name": [true, "allow-leading-underscore"]
+        "variable-name": [true, "allow-leading-underscore"],
+        "no-bitwise": false
     },
     "rulesDirectory": []
 }
