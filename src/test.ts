@@ -32,24 +32,21 @@ export function hasKeys<
  * @param testType to check if typeof val === testType
  */
 export const isType = <
-    T extends JsType
+  T extends JsType
 > (val: any, testType: T): val is JsTypeFind<T> => type(val) === testType;
-
-/** (val 'is' {} || val 'is' []) */
-export const isObjOrArr = (val: any): val is ({} | any[]) => val && typeof val === 'object';
 
 /** value 'is' (null || undefined || '' || [ ] || { }) */
 export function nullOrEmpty(x: any): boolean {
-    // null || undefined
-    if (nonValue(x)) return true;
+  // null || undefined
+  if (nonValue(x)) return true;
 
-    // (string || array).length === 0
-    if (isType(x, 'string') || isType(x, 'array')) return !x.length;
+  // (string || array).length === 0
+  if (isType(x, 'string') || isType(x, 'array')) return !x.length;
 
-    // object // { key: 'val' } => false, { } => true
-    if (isType(x, 'object')) return !objVals(x).length;
+  // object // { key: 'val' } => false, { } => true
+  if (isType(x, 'object')) return !objVals(x).length;
 
-    return false;
+  return false;
 }
 
 /** val 'is' (null || undefined) */

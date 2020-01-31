@@ -1,6 +1,8 @@
-import { dictionary, Optional, objKeyVals, uiid } from '.';
-import { wait } from './general';
-import { objVals, objKeys } from './object';
+import {
+    dictionary, Optional, objKeyVals,
+    uiid, wait, objVals, objKeys,
+    strRemove, equal
+} from '.';
 
 // local storage feature
 //  * 'state.key'
@@ -10,67 +12,91 @@ import { objVals, objKeys } from './object';
 
 const LS_KEY = '-utilStateManager.';
 
-export class StateManager<
-    S,
-    Key extends keyof S = keyof S
-> {
-    private readonly toLocalStorage: boolean = false;
-    private readonly localStorageId: string = '';
+const stateFromLocalStorage = (lsId: string) => {
+    const stateFromLS: any = { };
 
+    const lsKeys = objKeys(localStorage);
+
+    lsKeys.forEach((lsKey) => {
+        if (lsKey.indexOf(lsId) !== 0) return;
+
+        const item  = localStorage.getItem(lsKey);
+        const objKey = strRemove(lsKey, lsId);
+        stateFromLS[objKey] = item ? JSON.parse(item) : item;
+    })
+
+    return stateFromLS;
+}
+
+export class StateManager<
+    State,
+    Key extends keyof State = keyof State
+> {
     // oldState is used to check if an emit is necessary
-    private oldState: S = {} as S;
-    private state: S;
-    private subscriptions: dictionary<(s: S) => any> = { };
+    private oldState: State = {} as State;
+    private state: State = {} as State;
+
+    private readonly useLocalStorage: boolean = false;
+    private readonly lsId: string = '';
+
+    private subscriptions: dictionary<(s: State) => any> = { };
 
     /**
      * The local storage takes an id, this id should be unique
      * in order to ensure that the storage is unique to the given state object
      */
-    constructor(initialState: S | 'local-storage', toLocalStorage?: { id: string }) {
-        this.state = initialState === 'local-storage' ? this.fromLocalStorage() : initialState;
+    constructor(initialState: State, useLocalStorage?: { id: string }) {
+        let state = {} as State;
 
-        if (toLocalStorage) {
-            this.toLocalStorage = true;
-            this.localStorageId = toLocalStorage.id + LS_KEY;
-            this.updateLocalStorage();
+        if (useLocalStorage) {
+            this.useLocalStorage = true;
+            this.lsId = useLocalStorage.id + LS_KEY;
+            state = { ...initialState, ...stateFromLocalStorage(this.lsId) };
+
+            addEventListener('storage', (e: StorageEvent) => {
+                if (e.type !== 'storage') return;
+
+                const stateFromLS = stateFromLocalStorage(this.lsId);
+                if (equal(this.state, stateFromLS)) return;
+
+                if (!e.key || !e.newValue)
+                    throw Error(`key: ${e.key}; newValue: ${e.newValue}`);
+
+                const objKey = strRemove(e.key, this.lsId);
+                const update: any = { [objKey]: JSON.parse(e.newValue) };
+                this.setState(update);
+
+            });
+        } else {
+            state = initialState;
         }
 
-        this.stateEmit();
+        this.setState(state);
     }
 
-    getState = <K extends Key | undefined>(key?: K): K extends Key ? S[K] : S =>
-        (key ? this.state[key as keyof S] : this.state) as any
+    getState = () => this.state;
 
-    // { [k in Key]?: S[k] }
-    setState = (updateState: Optional<S>): S => {
+    setState = (updateState: Optional<State>): State => {
         const newState = { ...this.state };
         objKeyVals(updateState).forEach(({ key, val }) => newState[key] = val as any);
 
         this.state = newState;
-
-        // these two should be in this order
-        // this ensures that LS can utilize the
-        // oldState comparison before .stateEmit()
-        // updates it
-        this.updateLocalStorage();
-        this.stateEmit();
+        this.stateChanged();
 
         return newState;
     }
 
     /** Will execute the given function on state change, can subscribe to a particular key in the state */
-    subscribe = <K extends Key | undefined>(funct: (s: K extends Key ? S[K] : S) => any, key?: K) => {
+    subscribe(funct: (s: State) => any): { unsubscribe: () => boolean; }
+    subscribe<K extends Key = Key>(funct: (s: State[K]) => any, key: K): { unsubscribe: () => boolean; }
+    subscribe<K extends Key = Key>(funct: ((s: State[K]) => any) | ((s: State) => any), key?: K) {
         const id = uiid();
-        let f: (s: S) => any;
+        let f: (s: State) => any;
 
         if (key) {
-            f = (s: S) => {
+            f = (s: State) => {
                 // ensuring the function only fires only on a state change on a given key
-                if (
-                    this.oldState[key as keyof S]
-                    ===
-                    this.state[key as keyof S]
-                ) return;
+                if (equal(this.oldState[key], this.state[key])) return;
 
                 funct((s as any)[key]);
             }
@@ -85,49 +111,29 @@ export class StateManager<
         }
     }
 
-    fromLocalStorage = (): S => {
-        const stateFromLS: any = { };
-
-        const lsKeys = objKeys(localStorage)
-            .filter((key) => key.indexOf(LS_KEY) === 0);
-
-        lsKeys.forEach((key) => {
-            const item  = localStorage.getItem(key);
-
-            stateFromLS[key] = item ? JSON.parse(item) : undefined;
-        })
-
-        return stateFromLS;
-    }
-
-    private stateEmit = async () => {
-        // by waiting to emit this allows all state changes to be made in sync
-        // only then emitting to the subscriptions the new state change
+    private stateChanged = async () => {
+        // makes sure to run only after all sync code updates the state
         await wait(0);
 
-        objVals(this.subscriptions).forEach((f) => f(this.state));
+        if (equal(this.oldState, this.state)) return;
+
+        this.updateLocalStorage();
+        this.stateEmit();
+
         this.oldState = this.state;
     }
 
-    private updateLocalStorage = async () => {
-        // to allow updating
-        if (!this.toLocalStorage) return;
+    private stateEmit = () =>
+        objVals(this.subscriptions).forEach((f) => f(this.state));
 
-        // wait for all sync code to update the state object
-        // only updating LS once per sync code cycle
-        await wait(0);
+    private updateLocalStorage = () => {
+        if (!this.useLocalStorage) return;
 
-        const id = this.localStorageId;
-
+        const id = this.lsId;
         objKeyVals(this.state).forEach(({ key, val }) => {
-            if (this.oldState[key] === this.state[key]) return;
+            if (equal(this.oldState[key], this.state[key])) return;
 
-            localStorage.setItem(id + key, JSON.stringify(val))
+            localStorage.setItem(id + key, JSON.stringify(val));
         });
     }
-
-    // allows for syncing states across browser windows
-    // private onLocalStorageChange
-
-
 }
