@@ -52,7 +52,7 @@ export function objExtract<
     T extends {},
     K extends keyof T,
     U extends { [P in K]: T[P] }
->(extract: T, keys: K[]) {
+>(extract: T, keys: K[]): U {
     const newObj = { } as U;
     keys.forEach((key) => (newObj[key] as any as T[K]) = extract[key]);
 

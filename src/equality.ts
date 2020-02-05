@@ -1,3 +1,4 @@
+/* tslint:disable */
 // original source from https://github.com/epoberezkin/fast-deep-equal/blob/master/src/index.jst#L60
 
 export function equal(a: any, b: any) {

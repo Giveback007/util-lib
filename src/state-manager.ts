@@ -3,6 +3,7 @@ import {
     uiid, wait, objVals, objKeys,
     strRemove, equal
 } from '.';
+import { isType } from './test';
 
 // local storage feature
 //  * 'state.key'
@@ -29,8 +30,7 @@ const stateFromLocalStorage = (lsId: string) => {
 }
 
 export class StateManager<
-    State,
-    Key extends keyof State = keyof State
+    State, Key extends keyof State = keyof State
 > {
     // oldState is used to check if an emit is necessary
     private oldState: State = {} as State;
@@ -78,7 +78,8 @@ export class StateManager<
 
     setState = (updateState: Optional<State>): State => {
         const newState = { ...this.state };
-        objKeyVals(updateState).forEach(({ key, val }) => newState[key] = val as any);
+        objKeyVals(updateState).forEach(({ key, val }) =>
+            isType(val, 'undefined') ? null : newState[key] = val as any);
 
         this.state = newState;
         this.stateChanged();
@@ -100,15 +101,10 @@ export class StateManager<
 
                 funct((s as any)[key]);
             }
-        } else {
-            f = funct as any;
-        }
+        } else f = funct as any;
 
         this.subscriptions[id] = f;
-
-        return {
-            unsubscribe: () => delete this.subscriptions[id],
-        }
+        return { unsubscribe: () => delete this.subscriptions[id], }
     }
 
     private stateChanged = async () => {
