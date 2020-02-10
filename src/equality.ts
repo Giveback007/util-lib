@@ -53,21 +53,21 @@ export function equal(a: any, b: any) {
 		if (!Object.prototype.hasOwnProperty.call(b, keys[i])) return false;
 
 		for (i = length; i-- !== 0;) {
-		var key = keys[i];
+			var key = keys[i];
 
-		if (key === '_owner' && a.$$typeof) {
-			// React-specific: avoid traversing React elements' _owner.
-			//  _owner contains circular references
-			// and is not needed when comparing the actual elements (and not their owners)
-			continue;
-		}
+			if (key === '_owner' && a.$$typeof) {
+				// React-specific: avoid traversing React elements' _owner.
+				//  _owner contains circular references
+				// and is not needed when comparing the actual elements (and not their owners)
+				continue;
+			}
 
-		if (!equal(a[key], b[key])) return false;
+			if (!equal(a[key], b[key])) return false;
 		}
 
 		return true;
 	}
 
 	// true if both NaN, false otherwise
-	return a!==a && b!==b;
+	return a !== a && b !== b;
 };

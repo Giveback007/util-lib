@@ -10,6 +10,7 @@
         "tslib",
         "uiid"
     ],
+    "editor.rulers": [49],
     "typescript.tsdk": "node_modules\\typescript\\lib",
     "tslint.alwaysShowRuleFailuresAsWarnings": true,
     "tslint.exclude": "**/node_modules/**/*",

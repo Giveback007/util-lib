@@ -1,135 +1,197 @@
 import {
-    dictionary, Optional, objKeyVals,
-    uiid, wait, objVals, objKeys,
-    strRemove, equal
+  dictionary, Optional, objKeyVals,
+  uiid, wait, objVals, equal
 } from '.';
-import { isType } from './test';
+import { objExtract } from './object';
 
-// local storage feature
-//  * 'state.key'
-//  * update local storage if object is new on key
-// subscribe to individual keys
-// ensure that code only fires after all sync code ran
+type lsOptions<P> = {
+  id: string, useKeys?: P[], ignoreKeys?: P[]
+};
 
-const LS_KEY = '-utilStateManager.';
+const LS_KEY = '-utilStateManager';
 
-const stateFromLocalStorage = (lsId: string) => {
-    const stateFromLS: any = { };
+const stateFromLS = (id: string) => {
+  const strState = localStorage.getItem(id);
+  if (!strState) return { };
 
-    const lsKeys = objKeys(localStorage);
-
-    lsKeys.forEach((lsKey) => {
-        if (lsKey.indexOf(lsId) !== 0) return;
-
-        const item  = localStorage.getItem(lsKey);
-        const objKey = strRemove(lsKey, lsId);
-        stateFromLS[objKey] = item ? JSON.parse(item) : item;
-    })
-
-    return stateFromLS;
+  return JSON.parse(strState);
 }
 
 export class StateManager<
-    State, Key extends keyof State = keyof State
+  State, Key extends keyof State = keyof State
 > {
-    // oldState is used to check if an emit is necessary
-    private oldState: State = {} as State;
-    private state: State = {} as State;
+  /**
+   * emittedState is used to check if an emit is
+   * necessary it is not the same as prevState.
+   */
+  private emittedState: State = {} as State;
+  private prevState: State = {} as State;
+  private state: State = {} as State;
 
-    private readonly useLocalStorage: boolean = false;
-    private readonly lsId: string = '';
+  private readonly useLS:
+    lsOptions<Key> | false = false;
 
-    private subscriptions: dictionary<(s: State) => any> = { };
+  private subscriptions: dictionary<
+    (s: State, prev: State) => any
+  > = { };
 
-    /**
-     * The local storage takes an id, this id should be unique
-     * in order to ensure that the storage is unique to the given state object
-     */
-    constructor(initialState: State, useLocalStorage?: { id: string }) {
-        let state = {} as State;
+  /**
+   * The local storage takes an id, this id
+   * should be unique in order to ensure that the
+   * storage is unique to the given state object
+   */
+  constructor(
+    initialState: State,
+    useLocalStorage?: lsOptions<Key>
+  ) {
+    let state = { } as State;
 
-        if (useLocalStorage) {
-            this.useLocalStorage = true;
-            this.lsId = useLocalStorage.id + LS_KEY;
-            state = { ...initialState, ...stateFromLocalStorage(this.lsId) };
+    if (useLocalStorage) {
+      const {
+        useKeys, ignoreKeys, id
+      } = useLocalStorage;
 
-            addEventListener('storage', (e: StorageEvent) => {
-                if (e.type !== 'storage') return;
+      if (useKeys && ignoreKeys) throw Error(
+        '\'useKeys\' & \'ignoreKeys\' are'
+        + ' mutually exclusive, only use one'
+        + ' or the other.'
+      );
 
-                const stateFromLS = stateFromLocalStorage(this.lsId);
-                if (equal(this.state, stateFromLS)) return;
+      this.useLS = useLocalStorage;
+      const lsId = this.useLS.id = id + LS_KEY;
 
-                if (!e.key || !e.newValue)
-                    throw Error(`key: ${e.key}; newValue: ${e.newValue}`);
+      state = {
+        ...initialState,
+        ...stateFromLS(lsId)
+      };
 
-                const objKey = strRemove(e.key, this.lsId);
-                const update: any = { [objKey]: JSON.parse(e.newValue) };
-                this.setState(update);
+      addEventListener('storage', (e) => {
+        if (e.key !== lsId) return;
 
-            });
-        } else {
-            state = initialState;
-        }
+        let fromLS = stateFromLS(lsId);
 
-        this.setState(state);
-    }
+        if (useKeys)
+          fromLS = objExtract(fromLS, useKeys)
+        if (ignoreKeys) ignoreKeys
+          .forEach((key) => delete fromLS[key])
 
-    getState = () => this.state;
+        const lsState = {
+          ...this.state,
+          ...fromLS
+        };
 
-    setState = (updateState: Optional<State>): State => {
-        const newState = { ...this.state };
-        objKeyVals(updateState).forEach(({ key, val }) =>
-            isType(val, 'undefined') ? null : newState[key] = val as any);
+        if (equal(this.state, lsState)) return;
 
-        this.state = newState;
-        this.stateChanged();
+        this.setState(fromLS);
+      });
+    } else state = initialState;
 
-        return newState;
-    }
+    this.setState(state);
+  }
 
-    /** Will execute the given function on state change, can subscribe to a particular key in the state */
-    subscribe(funct: (s: State) => any): { unsubscribe: () => boolean; }
-    subscribe<K extends Key = Key>(funct: (s: State[K]) => any, key: K): { unsubscribe: () => boolean; }
-    subscribe<K extends Key = Key>(funct: ((s: State[K]) => any) | ((s: State) => any), key?: K) {
-        const id = uiid();
-        let f: (s: State) => any;
+  getState = () => this.state;
 
-        if (key) {
-            f = (s: State) => {
-                // ensuring the function only fires only on a state change on a given key
-                if (equal(this.oldState[key], this.state[key])) return;
+  setState = (
+    updateState: Optional<State>
+  ): State => {
+    const newState = { ...this.state };
 
-                funct((s as any)[key]);
-            }
-        } else f = funct as any;
+    objKeyVals(updateState).forEach((o) =>
+      newState[o.key] = o.val as any);
 
-        this.subscriptions[id] = f;
-        return { unsubscribe: () => delete this.subscriptions[id], }
-    }
+    this.prevState = this.state;
+    this.state = newState;
+    this.stateChanged();
 
-    private stateChanged = async () => {
-        // makes sure to run only after all sync code updates the state
-        await wait(0);
+    return newState;
+  }
 
-        if (equal(this.oldState, this.state)) return;
+  /**
+   * Will execute the given function on state
+   * change, can subscribe to a particular key
+   * in the state
+   */
+  // -- //
+  subscribe(
+    funct: (s: State, prev: State) => any
+  ): { unsubscribe: () => boolean; }
+  // -- //
+  subscribe<K extends Key = Key>(
+    funct: (s: State[K], prev: State[K]) => any,
+    key: K
+  ): { unsubscribe: () => boolean; }
+  // -- //
+  subscribe<K extends Key = Key>(
+    funct:
+      ((s: State[K], prev: State[K]) => any)
+      |
+      ((s: State, prev: State) => any),
+    key?: K
+  ) {
+    const id = uiid();
+    let f: (s: State, prev: State) => any;
 
-        this.updateLocalStorage();
-        this.stateEmit();
+    if (key) {
+      f = (s: State, prev: State) => {
+        // ensuring the function only fires only
+        // on a state change on a given key
+        if (equal(
+          this.emittedState[key],
+          this.state[key]
+        )) return;
 
-        this.oldState = this.state;
-    }
+        funct(
+          (s as any)[key],
+          (prev as any)[key]
+        );
+      }
+    } else f = funct as any;
 
-    private stateEmit = () =>
-        objVals(this.subscriptions).forEach((f) => f(this.state));
+    this.subscriptions[id] = f;
 
-    private updateLocalStorage = () => {
-        if (!this.useLocalStorage) return;
+    return {
+      unsubscribe: () =>
+        delete this.subscriptions[id]
+    };
+  }
 
-        const id = this.lsId;
-        objKeyVals(this.state).forEach(({ key, val }) => {
-            if (equal(this.oldState[key], this.state[key])) return;
+  private stateChanged = async () => {
+    // makes sure to run only after all sync
+    // code updates the state
+    await wait(0);
 
-            localStorage.setItem(id + key, JSON.stringify(val));
-        });
-    }
+    if (equal(
+      this.emittedState,
+      this.state
+    )) return;
+
+    this.updateLocalStorage();
+    this.stateEmit();
+
+    this.emittedState = this.state;
+  }
+
+  private stateEmit = () =>
+    objVals(this.subscriptions).forEach((f) =>
+      f(this.state, this.prevState));
+
+  private updateLocalStorage = () => {
+    if (!this.useLS) return;
+
+    const {
+      id,
+      ignoreKeys,
+      useKeys
+    } = this.useLS;
+
+    let state: State = { ...this.state };
+
+    if (ignoreKeys) ignoreKeys
+      .forEach((key) => delete state[key]);
+    else if (useKeys)
+      state = objExtract(state, useKeys);
+
+    localStorage
+      .setItem(id, JSON.stringify(state));
+  }
 }
