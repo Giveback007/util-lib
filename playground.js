@@ -39,7 +39,12 @@ const html =
 </body>
 </html>`;
 
-['node-index.ts', 'index.ts', ['index.html', html], 'index.sass'].forEach((file) => {
+[
+    'node-index.ts',
+    'index.ts',
+    ['index.html', html],
+    'index.sass'
+].forEach((file) => {
     let path = './playground/';
     let data = '';
     if (Array.isArray(file)) {

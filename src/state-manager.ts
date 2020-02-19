@@ -1,21 +1,13 @@
 import {
-  dictionary, Optional, objKeyVals,
-  uiid, wait, objVals, equal
+  dictionary, Optional, objKeyVals, uiid, wait,
+  objVals, equal, objExtract,
 } from '.';
-import { objExtract } from './object';
 
 type lsOptions<P> = {
   id: string, useKeys?: P[], ignoreKeys?: P[]
 };
 
 const LS_KEY = '-utilStateManager';
-
-const stateFromLS = (id: string) => {
-  const strState = localStorage.getItem(id);
-  if (!strState) return { };
-
-  return JSON.parse(strState);
-}
 
 export class StateManager<
   State, Key extends keyof State = keyof State
@@ -25,7 +17,6 @@ export class StateManager<
    * necessary it is not the same as prevState.
    */
   private emittedState: State = {} as State;
-  private prevState: State = {} as State;
   private state: State = {} as State;
 
   private readonly useLS:
@@ -62,13 +53,13 @@ export class StateManager<
 
       state = {
         ...initialState,
-        ...stateFromLS(lsId)
+        ...this.stateFromLS()
       };
 
       addEventListener('storage', (e) => {
         if (e.key !== lsId) return;
 
-        let fromLS = stateFromLS(lsId);
+        let fromLS = this.stateFromLS();
 
         if (useKeys)
           fromLS = objExtract(fromLS, useKeys)
@@ -99,9 +90,9 @@ export class StateManager<
     objKeyVals(updateState).forEach((o) =>
       newState[o.key] = o.val as any);
 
-    this.prevState = this.state;
+    const prevState = this.state;
     this.state = newState;
-    this.stateChanged();
+    this.stateChanged(prevState);
 
     return newState;
   }
@@ -155,7 +146,9 @@ export class StateManager<
     };
   }
 
-  private stateChanged = async () => {
+  private stateChanged = async (
+    prevState: State
+  ) => {
     // makes sure to run only after all sync
     // code updates the state
     await wait(0);
@@ -166,14 +159,22 @@ export class StateManager<
     )) return;
 
     this.updateLocalStorage();
-    this.stateEmit();
+
+    objVals(this.subscriptions).forEach((f) =>
+      f(this.state, prevState));
 
     this.emittedState = this.state;
   }
 
-  private stateEmit = () =>
-    objVals(this.subscriptions).forEach((f) =>
-      f(this.state, this.prevState));
+  private stateFromLS() {
+    if (!this.useLS) return;
+
+    const { id } = this.useLS;
+    const strState = localStorage.getItem(id);
+    if (!strState) return { };
+
+    return JSON.parse(strState);
+  }
 
   private updateLocalStorage = () => {
     if (!this.useLS) return;
