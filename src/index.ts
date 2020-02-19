@@ -8,6 +8,7 @@ export * from './log';
 export * from './number';
 export * from './object';
 export * from './snack-bar';
+export * from './state-manager-linker';
 export * from './state-manager';
 export * from './string';
 export * from './test';
