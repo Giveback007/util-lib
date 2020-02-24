@@ -1,4 +1,29 @@
-import { JsType } from '.';
+import { JsType, isType } from '.';
+
+
+export const interval = (
+    funct: Function,
+    time: number,
+    times?: number
+) => {
+    if (isType(times, 'number') && times < 1)
+        throw Error('argument times can\'t be less than 1');
+
+    let t = 0;
+    const intv = setInterval(() => {
+        funct();
+
+        if (isType(times, 'number')) {
+            t += 1;
+            if (t >= times) // check if this works as expected
+                clearInterval(intv);
+        }
+    }, time)
+
+    return {
+        stop: () => clearInterval(intv),
+    }
+}
 
 /** A promise that waits n amount of milliseconds to execute */
 export const wait = (ms: number) => new Promise((res) => setTimeout(() => res(), ms));
@@ -11,7 +36,7 @@ export const wait = (ms: number) => new Promise((res) => setTimeout(() => res(),
 export const cloneLog = (x: any) => console.log(clone(x));
 
 /** Creates a copy of the object trough JSON stringify and parse */
-export const clone = <T>(obj: T) => JSON.parse(JSON.stringify(obj));
+export const clone = <T>(item: T) => JSON.parse(JSON.stringify(item));
 
 /** An improved version of native `typeof` */
 export function type(val: any): JsType {
@@ -25,7 +50,9 @@ export function type(val: any): JsType {
     }
 }
 
-export const viewSize = () => ({ width: window.innerWidth, height: window.innerHeight });
+export const viewSize = ({
+    innerWidth, innerHeight
+} = window) => ({ width: innerWidth, height: innerHeight });
 
 export const uiid = () => {
     let d = new Date().getTime();

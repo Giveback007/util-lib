@@ -1,7 +1,7 @@
 import {
   dictionary, Optional, objKeyVals, uiid, wait,
   objVals, equal, objExtract,
-} from '.';
+} from '..';
 
 type lsOptions<P> = {
   id: string, useKeys?: P[], ignoreKeys?: P[]

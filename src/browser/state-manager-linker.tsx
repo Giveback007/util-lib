@@ -1,6 +1,7 @@
 import React = require('react');
-import { StateManager, clone, equal } from '.';
+import { clone, equal } from '..';
 import { ComponentType, FunctionComponent, ComponentClass } from 'react';
+import { StateManager } from '.';
 
 export function stateLinker<S>(store: StateManager<S>) {
     class Linker<ChildProps, M, FP> extends React.Component<

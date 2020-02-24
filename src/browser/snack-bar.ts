@@ -1,4 +1,4 @@
-import { isType, anyObj } from '.';
+import { isType, anyObj } from '..';
 
 export const snackBar = (item: any, time?: number) => {
     const str = isType(item, 'string') ? item : JSON.stringify(item);

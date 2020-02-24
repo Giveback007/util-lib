@@ -2,18 +2,7 @@ import { StackFrame } from 'stack-trace';
 // -- SOURCE MAP SUPPORT FOR STACK TRACES -- //
 
 import colors = require('colors/safe');
-
-/**
- * @param dt instance of Date obj
- * @returns `hh:mm:ss:ms` eg: `23:27:56:150`
- */
-export function timeString(dt = new Date()) {
-    const h = ('0' + dt.getHours()).slice(-2);
-    const m = ('0' + dt.getMinutes()).slice(-2);
-    const s = ('0' + dt.getSeconds()).slice(-2);
-    const ms = ('00' + dt.getMilliseconds()).slice(-3);
-    return `${h}:${m}:${s}:${ms}`;
-}
+import { timeString } from '../time';
 
 let logNodeErrInitExportable: (srcFolder: string) => (e: any) => void =
     (_x) => (_y) => undefined;

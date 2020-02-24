@@ -68,7 +68,7 @@ export function arrReplace<T>(arr: T[]) {
     };
 }
 
-export function arrRemoveValues<T>(arr: T[], valsToRemove: T[]) {
+export function arrRemoveValues<T>(arr: T[], valsToRemove: any[]) {
     let newArr = [ ...arr ];
     valsToRemove.forEach(removeVal => {
         newArr = newArr.filter(x => x !== removeVal);
