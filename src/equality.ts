@@ -1,5 +1,6 @@
 /* tslint:disable */
-// original source from https://github.com/epoberezkin/fast-deep-equal/blob/master/src/index.jst#L60
+// original source from:
+// https://github.com/epoberezkin/fast-deep-equal/blob/master/src/index.jst#L60
 
 export function equal(a: any, b: any) {
 	if (a === b) return true;
@@ -41,9 +42,12 @@ export function equal(a: any, b: any) {
 		}
 
 
-		if (a.constructor === RegExp) return a.source === b.source && a.flags === b.flags;
-		if (a.valueOf !== Object.prototype.valueOf) return a.valueOf() === b.valueOf();
-		if (a.toString !== Object.prototype.toString) return a.toString() === b.toString();
+		if (a.constructor === RegExp)
+			return a.source === b.source && a.flags === b.flags;
+		if (a.valueOf !== Object.prototype.valueOf)
+			return a.valueOf() === b.valueOf();
+		if (a.toString !== Object.prototype.toString)
+			return a.toString() === b.toString();
 
 		keys = Object.keys(a);
 		length = keys.length;
@@ -58,7 +62,8 @@ export function equal(a: any, b: any) {
 			if (key === '_owner' && a.$$typeof) {
 				// React-specific: avoid traversing React elements' _owner.
 				//  _owner contains circular references
-				// and is not needed when comparing the actual elements (and not their owners)
+				// and is not needed when comparing the actual elements
+				// (and not their owners)
 				continue;
 			}
 

@@ -1,7 +1,8 @@
 import { arrToIdxDict, isType } from '.';
 
 /** Generate a random number between min and max, min and max are inclusive */
-export const rand = (min: number, max: number) => Math.floor(Math.random() * ((max + 1) - min)) + min;
+export const rand = (min: number, max: number) =>
+    Math.floor(Math.random() * ((max + 1) - min)) + min;
 
 /** Takes a number || number[] and maxIdx, will generate a new random idx */
 export function newRandIdx(prevIdx: number | number[], maxIdx: number) {
@@ -21,8 +22,13 @@ export function newRandIdx(prevIdx: number | number[], maxIdx: number) {
     return num;
 }
 
-/** Takes a number || number[] and min & max, will generate a new random number */
-export function newNumFromRange(prevNum: number | number[], min: number, max: number) {
+/**
+ * Takes a number || number[] and min & max, will generate a new random
+ * number
+ */
+export function newNumFromRange(
+    prevNum: number | number[], min: number, max: number
+) {
     const dict = isType(prevNum, 'array') ? arrToIdxDict(prevNum) : null;
     let num = -1;
     let loop = 0;

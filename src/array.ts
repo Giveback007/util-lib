@@ -3,7 +3,8 @@ import {
 } from '.';
 
 /** Generates an array of null values */
-export const arrGen = <T = any>(length: number): T[] => Array(length).fill(null);
+export const arrGen = <T = any>(length: number): T[] =>
+    Array(length).fill(null);
 
 /**
  * @param idArr Array of ids to remove. Eg: ['1']
@@ -13,7 +14,9 @@ export const arrGen = <T = any>(length: number): T[] => Array(length).fill(null)
  * => [{ id: '2' }]
  * Removes objects from array by obj[idKey]: 'stringId'
  */
-export function arrRemoveById<T extends {}>(arr: T[], idKey: string, idArr: string[]) {
+export function arrRemoveById<T extends {}>(
+    arr: T[], idKey: string, idArr: string[]
+) {
     const objDict = arrToDict(arr, idKey);
     const keep: dictionary<T> = objRemoveKeys(objDict, idArr);
 
@@ -35,7 +38,8 @@ export const arrFlatten = (arr: any[]): any[] => [].concat.apply([], arr);
 
 /** [[[1, [1.1]], 2, 3], [4, 5]] => [1, 1.1, 2, 3, 4, 5] */
 export const arrDeepFlatten = (arr: any[]): any[] =>
-    arr.reduce((newArr: any[], x) => newArr.concat(isType(x, 'array') ? arrDeepFlatten(x) : x), []);
+    arr.reduce((newArr: any[], x) =>
+        newArr.concat(isType(x, 'array') ?arrDeepFlatten(x) : x), []);
 
 export function arrReplace<T>(arr: T[]) {
     return {

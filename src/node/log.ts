@@ -60,7 +60,9 @@ if (typeof window === 'undefined') {
 
             console.log(
                 colors[isSrc ? 'cyan' : 'red']((`   ${i}:`).slice(-4)),
-                colors[isSrc ? 'white' : 'grey'](name.substr(idx)) + ':' + colors.blue(line + ':' + col),
+                colors[isSrc ? 'white' : 'grey'](name.substr(idx))
+                    + ':'
+                    + colors.blue(line + ':' + col),
             );
         });
     };

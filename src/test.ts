@@ -9,7 +9,8 @@ import { JsType, JsTypeFind, objVals, type } from '.';
  */
 export const hasKey = <
     K extends (string | number)
->(obj: any, key: K): obj is { [P in K]: any } => isType(obj, 'object') && obj.hasOwnProperty(key);
+>(obj: any, key: K): obj is { [P in K]: any } =>
+  isType(obj, 'object') && obj.hasOwnProperty(key);
 
 /** Checks if object has keys from an array of keys, made as a function for type transfer */
 export function hasKeys<
@@ -50,4 +51,5 @@ export function nullOrEmpty(x: any): boolean {
 }
 
 /** val 'is' (null || undefined) */
-export const nonValue = (val: any): val is (null | undefined) => val === null || val === undefined;
+export const nonValue = (val: any): val is (null | undefined) =>
+  val === null || val === undefined;

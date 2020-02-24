@@ -15,7 +15,9 @@ export function objMap<
 }
 
 /** Filters out keys based on bool value returned by function */
-export function objFilter<O extends {}>(o: O, funct: (keyVal: { key: sKeys<O>, val: O[sKeys<O>] }) => boolean) {
+export function objFilter<O extends {}>(
+    o: O, funct: (keyVal: { key: sKeys<O>, val: O[sKeys<O>] }) => boolean
+) {
     const newObj = { ...o as any } as { [P in sKeys<O>]?: O[P] };
 
     for (const key in o) {
@@ -26,7 +28,9 @@ export function objFilter<O extends {}>(o: O, funct: (keyVal: { key: sKeys<O>, v
 }
 
 /** Removes all keys from object in the `filterOut` array */
-export function objRemoveKeys<T extends {}, K extends keyof T>(obj: T, filterOut: K[]) {
+export function objRemoveKeys<T extends {}, K extends keyof T>(
+    obj: T, filterOut: K[]
+) {
     const newObj: T = { ...obj as any };
     filterOut.forEach((key) => delete newObj[key]);
 
@@ -45,9 +49,13 @@ export function objKeys<T extends {}>(o: T): sKeys<T>[] {
 export const objVals = <T = any>(o: { [key: string]: T }): T[] =>
     Object.values ? Object.values(o) : objKeys(o).map((key) => o[key]);
 
-export const objKeyVals = <T extends {}>(o: T) => objKeys(o).map((key) => ({ key, val: o[key] }));
+export const objKeyVals = <T extends {}>(o: T) =>
+    objKeys(o).map((key) => ({ key, val: o[key] }));
 
-/** Creates a new object from `extract` object and an array of `keys` to transfer */
+/**
+ * Creates a new object from `extract` object and an array of `keys` to
+ * transfer
+ */
 export function objExtract<
     T extends {},
     K extends keyof T,
@@ -61,6 +69,8 @@ export function objExtract<
 
 /**
  * @param o the object that is to be resolved
- * @param path path to the desired value eg: "first.second.stuff" => obj.first.second.stuff
+ * @param path path to the desired value eg:
+ *  "first.second.stuff" => obj.first.second.stuff
  */
-export const objResolve = (o: anyObj, path: string) => path.split('.').reduce((prev, key) => prev[key], o);
+export const objResolve = (o: anyObj, path: string) =>
+    path.split('.').reduce((prev, key) => prev[key], o);
