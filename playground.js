@@ -23,6 +23,15 @@ fs.existsSync('./playground') ?
 deleteFile('./playground/dist');
 deleteFile('./playground/node-dist');
 
+const json =
+`{
+    "name": "playground",
+    "version": "0.0.1",
+    "description": "",
+    "main": "index.js",
+    "author": ""
+}`
+
 const html = 
 `<!DOCTYPE html>
 <html lang="en">
@@ -42,8 +51,9 @@ const html =
 [
     'node-index.ts',
     'index.ts',
+    'index.sass',
     ['index.html', html],
-    'index.sass'
+    ['package.json', json]
 ].forEach((file) => {
     let path = './playground/';
     let data = '';
