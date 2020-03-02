@@ -3,7 +3,7 @@ import {
   objVals, equal, objExtract,
 } from '..';
 
-type lsOptions<P> = 
+type lsOptions<P> =
 {
   id: string, useKeys?: P[], ignoreKeys?: P[]
 };
@@ -12,7 +12,7 @@ const LS_KEY = '-utilStateManager';
 
 export class StateManager<
   State, Key extends keyof State = keyof State
-> 
+>
 {
   /**
    * emittedState is used to check if an emit is
@@ -36,7 +36,7 @@ export class StateManager<
   constructor(
     initialState: State,
     useLocalStorage?: lsOptions<Key>
-  ) 
+  )
   {
     let state = { } as State;
 
@@ -87,7 +87,7 @@ export class StateManager<
 
   setState = (
     updateState: Optional<State>
-  ): State => 
+  ): State =>
   {
     const newState = { ...this.state };
 
@@ -122,7 +122,7 @@ export class StateManager<
       |
       ((s: State, prev: State) => any),
     key?: K
-  ) 
+  )
   {
     const id = uiid();
     let f: (s: State, prev: State) => any;
@@ -153,7 +153,7 @@ export class StateManager<
 
   private stateChanged = async (
     prevState: State
-  ) => 
+  ) =>
   {
     // makes sure to run only after all sync
     // code updates the state
@@ -172,7 +172,7 @@ export class StateManager<
     this.emittedState = this.state;
   }
 
-  private stateFromLS() 
+  private stateFromLS()
   {
     if (!this.useLS) return;
 
@@ -183,7 +183,7 @@ export class StateManager<
     return JSON.parse(strState);
   }
 
-  private updateLocalStorage = () => 
+  private updateLocalStorage = () =>
   {
     if (!this.useLS) return;
 

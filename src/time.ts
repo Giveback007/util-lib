@@ -1,13 +1,16 @@
+import * as moment from 'moment-timezone';
+
 /**
  * Converts Date to time of day.
  * Good for use in loging.
  *
  * If no parameter `dt = new Date()`.
  * @param dt instance of Date obj
- * @returns `ddd:hh:mm:ss:ms`
- * @example "015:07:56:150"
+ * @returns `hh:mm:ss:ms`
+ * @example "15:07:56:150"
  */
-export function timeString(dt = new Date()) {
+export function timeString(dt = new Date())
+{
     const h = ('0' + dt.getHours()).slice(-2);
     const m = ('0' + dt.getMinutes()).slice(-2);
     const s = ('0' + dt.getSeconds()).slice(-2);
@@ -19,6 +22,14 @@ type timeObj = { d: string; h: string; m: string; s: string; ms: string; }
 export function msToTime<T extends boolean>(msT: number, toObj?: boolean): string | timeObj;
 export function msToTime<T extends boolean>(msT: number, toObj: true): timeObj;
 export function msToTime<T extends boolean>(msT: number, toObj?: false): string;
+/**
+ * Takes milliseconds and outputs to human readable time
+ * @returns `ddd:hh:mm:ss:ms` | `{ d: string; h: string; m: string; s: string; ms: string; }`
+ * @example msToTime(86400005) => '001:00:00:00:005'
+ * ||
+ * msToTime(86400005, true) =>
+ *  { d: '001'; h: '00'; m: '00'; s: '00'; ms: '005'; }
+ */
 export function msToTime(msT: number, toObj = false)
 {
     // N - number;
@@ -58,23 +69,16 @@ export const dys = (d: number) => d * 86400000;
 /** Gives weeks in milliseconds | wks(w) => w * 604800000 */
 export const wks = (w: number) => w * 604800000;
 
-const getDayLimit = (daysFromNow) =>
+/** Gives the 'start' and 'end' milliseconds of a unix day */
+export const dayStartEnd = (unixMs: number) =>
 {
-	const now = time.now;
-	const lastDay = new Date(now.year, now.month, now.day + daysFromNow);
-	const end = lastDay.setHours(23, 59, 59, 999);
-	const offset = new Date(end).getTimezoneOffset() * 60000;
+    const t = moment(unixMs).utc();
 
-	return time.getTimeObj(end, offset);
-}
+    t.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+    const start = t.valueOf();
 
-time.getWeekLimit = (weeksFromNow) =>
-{
-	const now = time.now;
-	const day = now.day + (6 - now.weekDay) + (weeksFromNow * 7);
-	const lastDay = new Date(now.year, now.month, day);
-	const end = lastDay.setHours(23, 59, 59, 999);
-	const offset = new Date(end).getTimezoneOffset() * 60000;
+    t.set({ hour: 23, minute: 59, second: 59, millisecond: 999 });
+    const end = t.valueOf();
 
-	return time.getTimeObj(end, offset);
+	return { start, end };
 }
