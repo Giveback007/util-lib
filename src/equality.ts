@@ -2,7 +2,8 @@
 // original source from:
 // https://github.com/epoberezkin/fast-deep-equal/blob/master/src/index.jst#L60
 
-export function equal(a: any, b: any) {
+export function equal(a: any, b: any) 
+{
 	if (a === b) return true;
 
 	if (a && b && typeof a == 'object' && typeof b == 'object') {

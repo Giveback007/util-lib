@@ -67,8 +67,7 @@
   //   "./src/**/*"
   // ],
   "include": [
-    "./src/**/*",
-    "./playground/**/*"
+    "./src/**/*"
   ],
   "exclude": [
     "node_modules"

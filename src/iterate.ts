@@ -38,8 +38,8 @@ export function iterate(xLength: number, yLength?: number, zLength?: number): {
     nestedMap: <T>(funct: ({ x, y, z }: xyz) => T) => T[][][];
 };
 
-export function iterate(xLength: number, yLength?: number, zLength?: number) {
-
+export function iterate(xLength: number, yLength?: number, zLength?: number) 
+{
     const iterator = <T>(funct: (idxs: x | xy | xyz) => T, nested = false) => {
         const arr: T[] = [];
 

@@ -5,7 +5,8 @@ export const rand = (min: number, max: number) =>
     Math.floor(Math.random() * ((max + 1) - min)) + min;
 
 /** Takes a number || number[] and maxIdx, will generate a new random idx */
-export function newRandIdx(prevIdx: number | number[], maxIdx: number) {
+export function newRandIdx(prevIdx: number | number[], maxIdx: number) 
+{
     const dict = isType(prevIdx, 'array') ? arrToIdxDict(prevIdx) : null;
     let num = -1;
     let loop = 0;
@@ -28,7 +29,8 @@ export function newRandIdx(prevIdx: number | number[], maxIdx: number) {
  */
 export function newNumFromRange(
     prevNum: number | number[], min: number, max: number
-) {
+) 
+{
     const dict = isType(prevNum, 'array') ? arrToIdxDict(prevNum) : null;
     let num = -1;
     let loop = 0;

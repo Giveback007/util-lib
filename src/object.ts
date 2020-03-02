@@ -4,7 +4,8 @@ import { Omit, sKeys } from './@types';
 /** Maps over an object just as a [].map would */
 export function objMap<
     T, O extends {}
->(o: O, funct: (keyVal: { key: sKeys<O>, val: O[sKeys<O>] }) => T) {
+>(o: O, funct: (keyVal: { key: sKeys<O>, val: O[sKeys<O>] }) => T)
+{
     const newObj = {} as { [P in sKeys<O>]: T };
 
     for (const key in o) {
@@ -17,7 +18,8 @@ export function objMap<
 /** Filters out keys based on bool value returned by function */
 export function objFilter<O extends {}>(
     o: O, funct: (keyVal: { key: sKeys<O>, val: O[sKeys<O>] }) => boolean
-) {
+) 
+{
     const newObj = { ...o as any } as { [P in sKeys<O>]?: O[P] };
 
     for (const key in o) {
@@ -30,14 +32,16 @@ export function objFilter<O extends {}>(
 /** Removes all keys from object in the `filterOut` array */
 export function objRemoveKeys<T extends {}, K extends keyof T>(
     obj: T, filterOut: K[]
-) {
+) 
+{
     const newObj: T = { ...obj as any };
     filterOut.forEach((key) => delete newObj[key]);
 
     return newObj as Omit<T, K>;
 }
 
-export function objKeys<T extends {}>(o: T): sKeys<T>[] {
+export function objKeys<T extends {}>(o: T): sKeys<T>[] 
+{
     if (Object.keys) return Object.keys(o) as sKeys<T>[];
 
     const keys: sKeys<T>[] = [];
@@ -60,7 +64,8 @@ export function objExtract<
     T extends {},
     K extends keyof T,
     U extends { [P in K]: T[P] }
->(extract: T, keys: K[]): U {
+>(extract: T, keys: K[]): U 
+{
     const newObj = { } as U;
     keys.forEach((key) => (newObj[key] as any as T[K]) = extract[key]);
 

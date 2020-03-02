@@ -37,7 +37,8 @@ export const isType = <
 > (val: any, testType: T): val is JsTypeFind<T> => type(val) === testType;
 
 /** value 'is' (null || undefined || '' || [ ] || { }) */
-export function nullOrEmpty(x: any): boolean {
+export function nullOrEmpty(x: any): boolean 
+{
   // null || undefined
   if (nonValue(x)) return true;
 

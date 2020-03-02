@@ -7,16 +7,17 @@ import { timeString } from '../time';
 let logNodeErrInitExportable: (srcFolder: string) => (e: any) => void =
     (_x) => (_y) => undefined;
 
-if (typeof window === 'undefined') {
+if (typeof window === 'undefined') 
+{
     // tslint:disable-next-line: no-var-requires
     require('source-map-support').install({ environment: 'node' });
     // tslint:disable-next-line: no-var-requires
     const { parse: parseStack } = require('stack-trace');
 
-/**
- * Make sure to escape the slashes
- * @param srcFolder - eg: '/src/'
- */
+    /**
+     * Make sure to escape the slashes
+     * @param srcFolder - eg: '/src/'
+     */
     logNodeErrInitExportable = (srcFolder: string) => (e: any) => {
         const src = srcFolder.replace(/[/]/g, '\\');
 
@@ -70,7 +71,8 @@ if (typeof window === 'undefined') {
 
 export const logNodeErrInit = logNodeErrInitExportable;
 
-export const logNoteUtil: Console['log'] = (() => {
+export const logNoteUtil: Console['log'] = (() => 
+{
     const context = colors.cyan('Log: ' + timeString() + ' ||');
     return Function.prototype.bind.call(console.log, console, context);
 })();

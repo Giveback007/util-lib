@@ -1,6 +1,7 @@
 import { isType, anyObj } from '..';
 
-export const snackBar = (item: any, time?: number) => {
+export const snackBar = (item: any, time?: number) => 
+{
     const str = isType(item, 'string') ? item : JSON.stringify(item);
 
     const stylesToString = (obj: anyObj) => Object.entries(
@@ -24,7 +25,8 @@ export const snackBar = (item: any, time?: number) => {
     snack.appendChild(snackText);
     body.appendChild(snack);
 
-    const textStyles = {
+    const textStyles = 
+    {
         'margin': 'auto',
         'max-width': '80%',
         'background': 'black',
@@ -36,7 +38,8 @@ export const snackBar = (item: any, time?: number) => {
         'text-align': 'center',
     }
 
-    snack.setAttribute('style', stylesToString({
+    snack.setAttribute('style', stylesToString(
+    {
         'position': 'fixed',
         'left': '0',
         'bottom': '10vh',
@@ -56,14 +59,16 @@ export const snackBar = (item: any, time?: number) => {
     }
 
     setTimeout(() => {
-        snackText.setAttribute('style', stylesToString({
+        snackText.setAttribute('style', stylesToString(
+        {
             ...textStyles,
             'transition': `all ${time}ms`,
             'opacity': '0',
         }));
     }, 500);
 
-    setTimeout(() => {
+    setTimeout(() => 
+    {
         snack.remove();
         snackText.remove();
     }, time + 500);

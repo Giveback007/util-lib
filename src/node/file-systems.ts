@@ -1,7 +1,8 @@
 import fs = require('fs');
 import fsPath = require('path');
 
-export const deleteFile = (path: string) => {
+export const deleteFile = (path: string) => 
+{
     if (fs.existsSync(path)) {
 
         fs.readdirSync(path).forEach((file) => {

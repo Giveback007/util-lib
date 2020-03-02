@@ -4,8 +4,8 @@
  *
  * If no parameter `dt = new Date()`.
  * @param dt instance of Date obj
- * @returns `hh:mm:ss:ms`
- * @example "15:07:56:150"
+ * @returns `ddd:hh:mm:ss:ms`
+ * @example "015:07:56:150"
  */
 export function timeString(dt = new Date()) {
     const h = ('0' + dt.getHours()).slice(-2);
@@ -19,7 +19,8 @@ type timeObj = { d: string; h: string; m: string; s: string; ms: string; }
 export function msToTime<T extends boolean>(msT: number, toObj?: boolean): string | timeObj;
 export function msToTime<T extends boolean>(msT: number, toObj: true): timeObj;
 export function msToTime<T extends boolean>(msT: number, toObj?: false): string;
-export function msToTime(msT: number, toObj = false) {
+export function msToTime(msT: number, toObj = false)
+{
     // N - number;
     const msN = (msT % 1000);
     let sN = Math.floor(msT / 1000);
@@ -42,17 +43,38 @@ export function msToTime(msT: number, toObj = false) {
     return `${dN ? d + ':' : ''}${h}:${m}:${s}:${ms}`;
 }
 
-/** Gives time in milliseconds | sec(s) => s * 1000 */
+/** Gives seconds in milliseconds | sec(s) => s * 1000 */
 export const sec = (s: number) => s * 1000;
 
-/** Gives time in milliseconds | min(m) => m * 60000 */
+/** Gives minutes in milliseconds | min(m) => m * 60000 */
 export const min = (m: number) => m * 60000;
 
-/** Gives time in milliseconds | hrs(h) => h * 3600000 */
+/** Gives hours in milliseconds | hrs(h) => h * 3600000 */
 export const hrs = (h: number) => h * 3600000;
 
-/** Gives time in milliseconds | dys(d) => d * 86400000 */
+/** Gives days in milliseconds | dys(d) => d * 86400000 */
 export const dys = (d: number) => d * 86400000;
 
-/** Gives time in milliseconds | wks(w) => w * 604800000 */
+/** Gives weeks in milliseconds | wks(w) => w * 604800000 */
 export const wks = (w: number) => w * 604800000;
+
+const getDayLimit = (daysFromNow) =>
+{
+	const now = time.now;
+	const lastDay = new Date(now.year, now.month, now.day + daysFromNow);
+	const end = lastDay.setHours(23, 59, 59, 999);
+	const offset = new Date(end).getTimezoneOffset() * 60000;
+
+	return time.getTimeObj(end, offset);
+}
+
+time.getWeekLimit = (weeksFromNow) =>
+{
+	const now = time.now;
+	const day = now.day + (6 - now.weekDay) + (weeksFromNow * 7);
+	const lastDay = new Date(now.year, now.month, day);
+	const end = lastDay.setHours(23, 59, 59, 999);
+	const offset = new Date(end).getTimezoneOffset() * 60000;
+
+	return time.getTimeObj(end, offset);
+}

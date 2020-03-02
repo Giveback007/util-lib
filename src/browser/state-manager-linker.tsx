@@ -3,7 +3,8 @@ import { clone, equal } from '..';
 import { ComponentType, FunctionComponent, ComponentClass } from 'react';
 import { StateManager } from '.';
 
-export function stateLinker<S>(store: StateManager<S>) {
+export function stateLinker<S>(store: StateManager<S>) 
+{
     class Linker<ChildProps, M, FP> extends React.Component<
         { mapper: (s: S) => M, Child: ComponentType<FP>, childProps: ChildProps }, M
     > {

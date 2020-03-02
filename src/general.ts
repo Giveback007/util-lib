@@ -5,7 +5,8 @@ export const interval = (
     funct: Function,
     time: number,
     times?: number
-) => {
+) => 
+{
     if (isType(times, 'number') && times < 1)
         throw Error('argument times can\'t be less than 1');
 
@@ -40,7 +41,8 @@ export const cloneLog = (x: any) => console.log(clone(x));
 export const clone = <T>(item: T) => JSON.parse(JSON.stringify(item));
 
 /** An improved version of native `typeof` */
-export function type(val: any): JsType {
+export function type(val: any): JsType 
+{
     if (typeof val === 'object') {
         if (Array.isArray(val)) return 'array';
         else if (val === null)  return 'null';
@@ -55,7 +57,8 @@ export const viewSize = ({
     innerWidth, innerHeight
 } = window) => ({ width: innerWidth, height: innerHeight });
 
-export const uiid = () => {
+export const uiid = () => 
+{
     let d = new Date().getTime();
     let d2 = (
         performance

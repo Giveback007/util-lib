@@ -16,7 +16,8 @@ export const arrGen = <T = any>(length: number): T[] =>
  */
 export function arrRemoveById<T extends {}>(
     arr: T[], idKey: string, idArr: string[]
-) {
+) 
+{
     const objDict = arrToDict(arr, idKey);
     const keep: dictionary<T> = objRemoveKeys(objDict, idArr);
 
@@ -24,7 +25,8 @@ export function arrRemoveById<T extends {}>(
 }
 
 /** Divides the array in to multiple arrays arr.length/rowLength */
-export function arrDivide<T>(arr: T[], maxRowLength: number): T[][] {
+export function arrDivide<T>(arr: T[], maxRowLength: number): T[][] 
+{
     const rows = Math.ceil(arr.length / maxRowLength);
     const newArr = arrGen(rows).map(() => ([] as T[]));
 
@@ -41,7 +43,8 @@ export const arrDeepFlatten = (arr: any[]): any[] =>
     arr.reduce((newArr: any[], x) =>
         newArr.concat(isType(x, 'array') ?arrDeepFlatten(x) : x), []);
 
-export function arrReplace<T>(arr: T[]) {
+export function arrReplace<T>(arr: T[]) 
+{
     return {
         all: (item: T) => {
             const newArr = [ ...arr ];
@@ -72,7 +75,8 @@ export function arrReplace<T>(arr: T[]) {
     };
 }
 
-export function arrRemoveValues<T>(arr: T[], valsToRemove: any[]) {
+export function arrRemoveValues<T>(arr: T[], valsToRemove: any[]) 
+{
     let newArr = [ ...arr ];
     valsToRemove.forEach(removeVal => {
         newArr = newArr.filter(x => x !== removeVal);
@@ -81,21 +85,24 @@ export function arrRemoveValues<T>(arr: T[], valsToRemove: any[]) {
     return newArr;
 }
 
-export function arrToDict<T extends anyObj>(arr: T[], idKey: string) {
+export function arrToDict<T extends anyObj>(arr: T[], idKey: string) 
+{
     const dict: dictionary<T> = { };
     arr.forEach((obj) => dict[obj[idKey]] = obj);
 
     return dict;
 }
 
-export function arrToIdxDict(arr: (number | string)[]) {
+export function arrToIdxDict(arr: (number | string)[]) 
+{
     const dict: dictionary<string> = { };
     arr.forEach((x, idx) => dict[x] = idx + '');
 
     return dict;
 }
 
-export function arrToBoolDict(arr: (string | number)[]) {
+export function arrToBoolDict(arr: (string | number)[]) 
+{
     const dict: dictionary<boolean> = { };
     arr.forEach((x) => dict[x] = true);
 

@@ -3,7 +3,8 @@ import {
   objVals, equal, objExtract,
 } from '..';
 
-type lsOptions<P> = {
+type lsOptions<P> = 
+{
   id: string, useKeys?: P[], ignoreKeys?: P[]
 };
 
@@ -11,7 +12,8 @@ const LS_KEY = '-utilStateManager';
 
 export class StateManager<
   State, Key extends keyof State = keyof State
-> {
+> 
+{
   /**
    * emittedState is used to check if an emit is
    * necessary it is not the same as prevState.
@@ -34,7 +36,8 @@ export class StateManager<
   constructor(
     initialState: State,
     useLocalStorage?: lsOptions<Key>
-  ) {
+  ) 
+  {
     let state = { } as State;
 
     if (useLocalStorage) {
@@ -84,7 +87,8 @@ export class StateManager<
 
   setState = (
     updateState: Optional<State>
-  ): State => {
+  ): State => 
+  {
     const newState = { ...this.state };
 
     objKeyVals(updateState).forEach((o) =>
@@ -118,7 +122,8 @@ export class StateManager<
       |
       ((s: State, prev: State) => any),
     key?: K
-  ) {
+  ) 
+  {
     const id = uiid();
     let f: (s: State, prev: State) => any;
 
@@ -148,7 +153,8 @@ export class StateManager<
 
   private stateChanged = async (
     prevState: State
-  ) => {
+  ) => 
+  {
     // makes sure to run only after all sync
     // code updates the state
     await wait(0);
@@ -166,7 +172,8 @@ export class StateManager<
     this.emittedState = this.state;
   }
 
-  private stateFromLS() {
+  private stateFromLS() 
+  {
     if (!this.useLS) return;
 
     const { id } = this.useLS;
@@ -176,7 +183,8 @@ export class StateManager<
     return JSON.parse(strState);
   }
 
-  private updateLocalStorage = () => {
+  private updateLocalStorage = () => 
+  {
     if (!this.useLS) return;
 
     const {
