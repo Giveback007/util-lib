@@ -98,8 +98,27 @@ export const dayStartEnd = (unixMs: number) =>
 	return { start, end };
 }
 
+/** Gives the 'start' and 'end' milliseconds of a unix month */
+export const monthStartEnd = (unixMs: number): {
+    start: number;
+    end: number;
+} =>
+{
+    const year = moment(unixMs).utc().year();
+    const month = ('0' + (moment(unixMs).utc().month() + 1)).slice(-2);
+
+    const s = moment(`${year}-${month}-01`).set({ h: 0, m: 0, s: 0, ms: 0 });
+    const start = s.valueOf() + min(s.utcOffset());
+
+    const e = moment(`${year}-${month}-31`).set({ h: 23, m: 59, s: 59, ms: 999 });
+    const end = e.valueOf() + min(e.utcOffset());
+
+    return { start, end };
+}
+
 /** Gives the 'start' and 'end' milliseconds of a unix year */
-export const yearStartEnd = (unixMs: number) => {
+export const yearStartEnd = (unixMs: number) =>
+{
     const year = moment(unixMs).utc().year();
 
     const s = moment(`${year}-01-01`).set({ h: 0, m: 0, s: 0, ms: 0 });
