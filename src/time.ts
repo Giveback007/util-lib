@@ -1,4 +1,4 @@
-import * as moment from 'moment-timezone';
+import moment = require('moment-timezone');
 
 /**
  * Converts Date to time of day.
@@ -55,30 +55,58 @@ export function msToTime(msT: number, toObj = false)
 }
 
 /** Gives seconds in milliseconds | sec(s) => s * 1000 */
-export const sec = (s: number) => s * 1000;
+export const seconds = (s: number) => s * 1000;
+
+/** Analog of seconds() */
+export const sec = seconds;
 
 /** Gives minutes in milliseconds | min(m) => m * 60000 */
-export const min = (m: number) => m * 60000;
+export const minutes = (m: number) => m * 60000;
+
+/** Analog of minutes() */
+export const min = minutes;
 
 /** Gives hours in milliseconds | hrs(h) => h * 3600000 */
-export const hrs = (h: number) => h * 3600000;
+export const hours = (h: number) => h * 3600000;
+
+/** Analog of hours */
+export const hrs = hours;
 
 /** Gives days in milliseconds | dys(d) => d * 86400000 */
-export const dys = (d: number) => d * 86400000;
+export const days = (d: number) => d * 86400000;
+
+/** Analog of days */
+export const dys = days;
 
 /** Gives weeks in milliseconds | wks(w) => w * 604800000 */
-export const wks = (w: number) => w * 604800000;
+export const weeks = (w: number) => w * 604800000;
+
+/** Analog of weeks */
+export const wks = weeks;
 
 /** Gives the 'start' and 'end' milliseconds of a unix day */
 export const dayStartEnd = (unixMs: number) =>
 {
     const t = moment(unixMs).utc();
 
-    t.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+    t.set({ h: 0, m: 0, s: 0, ms: 0 });
     const start = t.valueOf();
 
-    t.set({ hour: 23, minute: 59, second: 59, millisecond: 999 });
+    t.set({ h: 23, m: 59, s: 59, ms: 999 });
     const end = t.valueOf();
 
 	return { start, end };
+}
+
+/** Gives the 'start' and 'end' milliseconds of a unix year */
+export const yearStartEnd = (unixMs: number) => {
+    const year = moment(unixMs).utc().year();
+
+    const s = moment(`${year}-01-01`).set({ h: 0, m: 0, s: 0, ms: 0 });
+    const start = s.valueOf() + min(s.utcOffset());
+
+    const e = moment(`${year}-12-31`).set({ h: 23, m: 59, s: 59, ms: 999 });
+    const end = e.valueOf() + min(e.utcOffset());
+
+    return { start, end };
 }
