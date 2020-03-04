@@ -1,5 +1,5 @@
 import {
-    anyObj, dictionary, isType, nonValue, objRemoveKeys, objVals,
+    anyObj, dictionary, isType, nonValue, objRemoveKeys, objVals, equal,
 } from '.';
 
 /** Generates an array of null values */
@@ -14,8 +14,8 @@ export const arrGen = <T = any>(length: number): T[] =>
  * => [{ id: '2' }]
  * Removes objects from array by obj[idKey]: 'stringId'
  */
-export function arrRemoveById<T extends {}>(
-    arr: T[], idKey: string, idArr: string[]
+export function arrRemoveById<T extends anyObj>(
+    arr: T[], idKey: keyof T, idArr: string[]
 )
 {
     const objDict = arrToDict(arr, idKey);
@@ -49,7 +49,7 @@ export function arrReplace<T>(arr: T[])
         all: (item: T) => {
             const newArr = [ ...arr ];
             const idxs: number[] = [];
-            arr.forEach((match, i) => item === match ? idxs.push(i) : null);
+            arr.forEach((match, i) => equal(item, match) ? idxs.push(i) : null);
 
             return {
                 with: (newItem: T) => {
@@ -62,7 +62,7 @@ export function arrReplace<T>(arr: T[])
         },
         first: (item: T) => {
             const newArr = [ ...arr ];
-            const idx = arr.findIndex((match) => item === match);
+            const idx = arr.findIndex((match) => equal(item, match));
             return {
                 with: (newItem: T) => {
                     if (nonValue(idx)) return arr;
@@ -78,14 +78,13 @@ export function arrReplace<T>(arr: T[])
 export function arrRemoveValues<T>(arr: T[], valsToRemove: any[])
 {
     let newArr = [ ...arr ];
-    valsToRemove.forEach(removeVal => {
-        newArr = newArr.filter(x => x !== removeVal);
-    });
+    valsToRemove.forEach(removeVal =>
+        newArr = newArr.filter(x => x !== removeVal));
 
     return newArr;
 }
 
-export function arrToDict<T extends anyObj>(arr: T[], idKey: string)
+export function arrToDict<T extends anyObj>(arr: T[], idKey: keyof T)
 {
     const dict: dictionary<T> = { };
     arr.forEach((obj) => dict[obj[idKey]] = obj);

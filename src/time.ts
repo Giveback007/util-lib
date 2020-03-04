@@ -84,6 +84,12 @@ export const weeks = (w: number) => w * 604800000;
 /** Analog of weeks */
 export const wks = weeks;
 
+/**
+ * Get unixMs for a given date/time, input time is in UTC
+ * @example unixMs('2015-01-02') => 1420128000000
+ */
+export const unixMs = (time: string) => moment(time).utc().valueOf();
+
 /** Gives the 'start' and 'end' milliseconds of a unix day */
 export const dayStartEnd = (unixMs: number) =>
 {
