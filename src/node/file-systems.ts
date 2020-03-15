@@ -3,17 +3,14 @@ import fsPath = require('path');
 
 export const deleteFile = (path: string) =>
 {
-    if (fs.existsSync(path)) {
+  if (fs.existsSync(path)) {
+    if (!fs.lstatSync(path).isDirectory())
+      return fs.unlinkSync(path);
+    else
+      fs.readdirSync(path).forEach((file) =>
+        deleteFile(fsPath.join(path, file))
+      );
 
-        fs.readdirSync(path).forEach((file) => {
-          const curPath = fsPath.join(path, file);
-          if (fs.lstatSync(curPath).isDirectory())
-            deleteFile(curPath);
-          else
-            fs.unlinkSync(curPath);
-        });
-
-        fs.rmdirSync(path);
-
-    }
+    fs.rmdirSync(path);
+  }
 }

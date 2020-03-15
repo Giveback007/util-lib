@@ -81,3 +81,6 @@ export const uiid = () =>
         return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
 }
+
+export const randomColoHex = () =>
+    '#' + ((1<<24)*Math.random()|0).toString(16);

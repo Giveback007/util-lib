@@ -1,12 +1,12 @@
 import { anyObj } from '.';
 import { Omit, sKeys } from './@types';
 
-/** Maps over an object just as a [].map would */
+/** Maps over an object just as a [ ].map would */
 export function objMap<
     T, O extends {}
 >(o: O, funct: (keyVal: { key: sKeys<O>, val: O[sKeys<O>] }) => T)
 {
-    const newObj = {} as { [P in sKeys<O>]: T };
+    const newObj = { } as { [P in sKeys<O>]: T };
 
     for (const key in o) {
         newObj[key] = funct({ key, val: o[key] });
@@ -20,13 +20,13 @@ export function objFilter<O extends {}>(
     o: O, funct: (keyVal: { key: sKeys<O>, val: O[sKeys<O>] }) => boolean
 )
 {
-    const newObj = { ...o as any } as { [P in sKeys<O>]?: O[P] };
+    const newObj = { ...o };
 
     for (const key in o) {
         if (!funct({ key, val: o[key] })) delete newObj[key];
     }
 
-    return newObj;
+    return newObj as { [P in sKeys<O>]?: O[P] };
 }
 
 /** Removes all keys from object in the `filterOut` array */
@@ -77,5 +77,18 @@ export function objExtract<
  * @param path path to the desired value eg:
  *  "first.second.stuff" => obj.first.second.stuff
  */
-export const objResolve = (o: anyObj, path: string) =>
+export const objResolve = (o: anyObj, path: string): any =>
     path.split('.').reduce((prev, key) => prev[key], o);
+
+/**
+ * returns a new obj with the keys being sorted
+ */
+export const objSortKeys = <T extends {}>(o: T, compareFn?: (a: keyof T, b: keyof T) => number) =>
+{
+    const newObj = {} as T;
+
+    const keys = objKeys(o).sort(compareFn);
+    keys.map((k) => newObj[k] = o[k]);
+
+    return newObj;
+}

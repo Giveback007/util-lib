@@ -5,7 +5,8 @@
         "gmail",
         "idxs",
         "tslib",
-        "uiid"
+        "uiid",
+        "yxxx"
     ],
     "editor.rulers": [49, 80],
     "typescript.tsdk": "node_modules\\typescript\\lib",

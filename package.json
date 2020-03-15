@@ -1,6 +1,6 @@
 {
   "name": "@giveback007/util-lib",
-  "version": "0.13.3",
+  "version": "0.13.4",
   "description": "Small util function library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -49,6 +49,6 @@
     "ts-jest": "^25.0.0",
     "tslint": "^6.0.0",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.3"
   }
 }

@@ -46,3 +46,6 @@ export function newNumFromRange(
 
     return num;
 }
+
+export const numberWithCommas = (n: number | string) =>
+    n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');

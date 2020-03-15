@@ -91,9 +91,9 @@ export const wks = weeks;
 export const unixMs = (time: string) => moment(time).utc().valueOf();
 
 /** Gives the 'start' and 'end' milliseconds of a unix day */
-export const dayStartEnd = (unixMs: number) =>
+export const dayStartEnd = (unixMsTime: number) =>
 {
-    const t = moment(unixMs).utc();
+    const t = moment(unixMsTime).utc();
 
     t.set({ h: 0, m: 0, s: 0, ms: 0 });
     const start = t.valueOf();
@@ -105,13 +105,13 @@ export const dayStartEnd = (unixMs: number) =>
 }
 
 /** Gives the 'start' and 'end' milliseconds of a unix month */
-export const monthStartEnd = (unixMs: number): {
+export const monthStartEnd = (unixMsTime: number): {
     start: number;
     end: number;
 } =>
 {
-    const year = moment(unixMs).utc().year();
-    const month = ('0' + (moment(unixMs).utc().month() + 1)).slice(-2);
+    const year = moment(unixMsTime).utc().year();
+    const month = ('0' + (moment(unixMsTime).utc().month() + 1)).slice(-2);
 
     const s = moment(`${year}-${month}-01`).set({ h: 0, m: 0, s: 0, ms: 0 });
     const start = s.valueOf() + min(s.utcOffset());
@@ -123,9 +123,9 @@ export const monthStartEnd = (unixMs: number): {
 }
 
 /** Gives the 'start' and 'end' milliseconds of a unix year */
-export const yearStartEnd = (unixMs: number) =>
+export const yearStartEnd = (unixMsTime: number) =>
 {
-    const year = moment(unixMs).utc().year();
+    const year = moment(unixMsTime).utc().year();
 
     const s = moment(`${year}-01-01`).set({ h: 0, m: 0, s: 0, ms: 0 });
     const start = s.valueOf() + min(s.utcOffset());
