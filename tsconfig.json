@@ -22,6 +22,7 @@
     // "downlevelIteration": true,              /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
     // "isolatedModules": true,                 /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
     "pretty": true,                             /* Stylize errors and messages using color and context (experimental). */
+    "resolveJsonModule": true,
 
     /* -- Strict Type-Checking Options -- */
     "alwaysStrict": true,                       /* Parse in strict mode and emit "use strict" for each source file. */
@@ -32,6 +33,7 @@
     "strictNullChecks": true,                   /* Enable strict null checks. */
     "strictPropertyInitialization": true,       /* Ensure non-undefined class properties are initialized in the constructor. */
     // "noStrictGenericChecks": true,           /* Disable strict checking of generic signatures in function types. */
+    
 
     /* -- Additional Checks -- */
     "noFallthroughCasesInSwitch": false,        /* Report errors for fallthrough cases in switch statement. */

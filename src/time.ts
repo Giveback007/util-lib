@@ -18,7 +18,7 @@ export function timeString(dt = new Date())
     return `${h}:${m}:${s}:${ms}`;
 }
 
-type timeObj = { d: string; h: string; m: string; s: string; ms: string; }
+type timeObj = { d: number; h: number; m: number; s: number; ms: number; }
 export function msToTime<T extends boolean>(msT: number, toObj?: boolean): string | timeObj;
 export function msToTime<T extends boolean>(msT: number, toObj: true): timeObj;
 export function msToTime<T extends boolean>(msT: number, toObj?: false): string;
@@ -50,7 +50,7 @@ export function msToTime(msT: number, toObj = false)
     const s = (('0' + sN)).slice(-2);
     const ms = (('00' + msN).slice(-3));
 
-    if (toObj) return { d, h, m, s, ms };
+    if (toObj) return { d: dN, h: hN, m: mN, s: sN, ms: msN };
     return `${dN ? d + ':' : ''}${h}:${m}:${s}:${ms}`;
 }
 
