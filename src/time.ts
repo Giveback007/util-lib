@@ -1,5 +1,13 @@
 import moment = require('moment-timezone');
 
+const msTime = {
+    s: 1000,
+    m: 60000,
+    h: 3600000,
+    d: 86400000,
+    w: 604800000,
+}
+
 /**
  * Converts Date to time of day.
  * Good for use in loging.
@@ -9,7 +17,7 @@ import moment = require('moment-timezone');
  * @returns `hh:mm:ss:ms`
  * @example "15:07:56:150"
  */
-export function timeString(dt = new Date())
+export function dateTimeToString(dt = new Date())
 {
     const h = ('0' + dt.getHours()).slice(-2);
     const m = ('0' + dt.getMinutes()).slice(-2);
@@ -17,6 +25,12 @@ export function timeString(dt = new Date())
     const ms = ('00' + dt.getMilliseconds()).slice(-3);
     return `${h}:${m}:${s}:${ms}`;
 }
+
+export const msToSec = (ms: number) => ms / msTime.s;
+export const msToMin = (ms: number) => ms / msTime.m;
+export const msToHrs = (ms: number) => ms / msTime.h;
+export const msToDys = (ms: number) => ms / msTime.d;
+export const msToWks = (ms: number) => ms / msTime.w;
 
 type timeObj = { d: number; h: number; m: number; s: number; ms: number; }
 export function msToTime<T extends boolean>(msT: number, toObj?: boolean): string | timeObj;
@@ -55,31 +69,31 @@ export function msToTime(msT: number, toObj = false)
 }
 
 /** Gives seconds in milliseconds | sec(s) => s * 1000 */
-export const seconds = (s: number) => s * 1000;
+export const seconds = (s: number) => s * msTime.s;
 
 /** Analog of seconds() */
 export const sec = seconds;
 
 /** Gives minutes in milliseconds | min(m) => m * 60000 */
-export const minutes = (m: number) => m * 60000;
+export const minutes = (m: number) => m * msTime.m;
 
 /** Analog of minutes() */
 export const min = minutes;
 
 /** Gives hours in milliseconds | hrs(h) => h * 3600000 */
-export const hours = (h: number) => h * 3600000;
+export const hours = (h: number) => h * msTime.h;
 
 /** Analog of hours */
 export const hrs = hours;
 
 /** Gives days in milliseconds | dys(d) => d * 86400000 */
-export const days = (d: number) => d * 86400000;
+export const days = (d: number) => d * msTime.d;
 
 /** Analog of days */
 export const dys = days;
 
 /** Gives weeks in milliseconds | wks(w) => w * 604800000 */
-export const weeks = (w: number) => w * 604800000;
+export const weeks = (w: number) => w * msTime.w;
 
 /** Analog of weeks */
 export const wks = weeks;

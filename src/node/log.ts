@@ -2,7 +2,7 @@ import { StackFrame } from 'stack-trace';
 // -- SOURCE MAP SUPPORT FOR STACK TRACES -- //
 
 import colors = require('colors/safe');
-import { timeString } from '../time';
+import { dateTimeToString } from '../time';
 
 let logNodeErrInitExportable: (srcFolder: string) => (e: any) => void =
     (_x) => (_y) => undefined;
@@ -37,7 +37,7 @@ if (typeof window === 'undefined')
             return { stack: s, message: m };
         })();
 
-        console.log(colors.red('Err: ' + timeString() + ' || '), message);
+        console.log(colors.red('Err: ' + dateTimeToString() + ' || '), message);
 
         // -- Stack Trace -- //
         stack.forEach((x, i) => {
@@ -73,6 +73,6 @@ export const logNodeErrInit = logNodeErrInitExportable;
 
 export const logNoteUtil: Console['log'] = (() =>
 {
-    const context = colors.cyan('Log: ' + timeString() + ' ||');
+    const context = colors.cyan('Log: ' + dateTimeToString() + ' ||');
     return Function.prototype.bind.call(console.log, console, context);
 })();

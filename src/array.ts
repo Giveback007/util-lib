@@ -1,5 +1,6 @@
 import {
-    anyObj, dictionary, isType, nonValue, objRemoveKeys, objVals, equal,
+    anyObj, dictionary, isType, nonValue,
+    objRemoveKeys, objVals, equal,
 } from '.';
 
 /** Generates an array of null values */
@@ -36,10 +37,10 @@ export function arrDivide<T>(arr: T[], maxRowLength: number): T[][]
 }
 
 /** [[[1, [1.1]], 2, 3], [4, 5]] => [[1, [1.1]], 2, 3, 4, 5] */
-export const arrFlatten = (arr: any[]): any[] => [].concat.apply([], arr);
+export const arrFlatten = <T = any>(arr: any[]): T[] => [].concat.apply([], arr);
 
 /** [[[1, [1.1]], 2, 3], [4, 5]] => [1, 1.1, 2, 3, 4, 5] */
-export const arrDeepFlatten = (arr: any[]): any[] =>
+export const arrDeepFlatten = <T = any>(arr: any[]): T[] =>
     arr.reduce((newArr: any[], x) =>
         newArr.concat(isType(x, 'array') ?arrDeepFlatten(x) : x), []);
 
@@ -107,3 +108,6 @@ export function arrToBoolDict(arr: (string | number)[])
 
     return dict;
 }
+
+/** Gets the last item from the array */
+export const arrLast = <T>(arr: T[]) => arr[arr.length - 1];
