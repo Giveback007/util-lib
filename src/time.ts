@@ -1,6 +1,19 @@
 import moment = require('moment-timezone');
 
-const msTime = {
+export type MsTime = {
+    /** second */
+    s: 1000;
+    /** minute */
+    m: 60000;
+    /** hour */
+    h: 3600000;
+    /** day */
+    d: 86400000;
+    /** week */
+    w: 604800000;
+}
+
+export const msTime: MsTime = {
     s: 1000,
     m: 60000,
     h: 3600000,
@@ -33,17 +46,17 @@ export const msToDys = (ms: number) => ms / msTime.d;
 export const msToWks = (ms: number) => ms / msTime.w;
 
 type timeObj = { d: number; h: number; m: number; s: number; ms: number; }
-export function msToTime<T extends boolean>(msT: number, toObj?: boolean): string | timeObj;
-export function msToTime<T extends boolean>(msT: number, toObj: true): timeObj;
-export function msToTime<T extends boolean>(msT: number, toObj?: false): string;
 /**
  * Takes milliseconds and outputs to human readable time
- * @returns `ddd:hh:mm:ss:ms` | `{ d: string; h: string; m: string; s: string; ms: string; }`
+ * @returns `'ddd:hh:mm:ss:ms'` | `{ d: number; h: number; m: number; s: number; ms: number; }`
  * @example msToTime(86400005) => '001:00:00:00:005'
  * ||
  * msToTime(86400005, true) =>
- *  { d: '001'; h: '00'; m: '00'; s: '00'; ms: '005'; }
+ *  { d: 1; h: 0; m: 0; s: 0; ms: 5; }
  */
+export function msToTime<T extends boolean>(msT: number, toObj?: boolean): string | timeObj;
+export function msToTime<T extends boolean>(msT: number, toObj: true): timeObj;
+export function msToTime<T extends boolean>(msT: number, toObj?: false): string;
 export function msToTime(msT: number, toObj = false)
 {
     // N - number;
@@ -68,31 +81,31 @@ export function msToTime(msT: number, toObj = false)
     return `${dN ? d + ':' : ''}${h}:${m}:${s}:${ms}`;
 }
 
-/** Gives seconds in milliseconds | sec(s) => s * 1000 */
+/** Gives seconds in milliseconds | `sec(s) => s * 1000` */
 export const seconds = (s: number) => s * msTime.s;
 
 /** Analog of seconds() */
 export const sec = seconds;
 
-/** Gives minutes in milliseconds | min(m) => m * 60000 */
+/** Gives minutes in milliseconds | `min(m) => m * 60000` */
 export const minutes = (m: number) => m * msTime.m;
 
 /** Analog of minutes() */
 export const min = minutes;
 
-/** Gives hours in milliseconds | hrs(h) => h * 3600000 */
+/** Gives hours in milliseconds | `hrs(h) => h * 3600000` */
 export const hours = (h: number) => h * msTime.h;
 
 /** Analog of hours */
 export const hrs = hours;
 
-/** Gives days in milliseconds | dys(d) => d * 86400000 */
+/** Gives days in milliseconds | `dys(d) => d * 86400000` */
 export const days = (d: number) => d * msTime.d;
 
 /** Analog of days */
 export const dys = days;
 
-/** Gives weeks in milliseconds | wks(w) => w * 604800000 */
+/** Gives weeks in milliseconds | `wks(w) => w * 604800000` */
 export const weeks = (w: number) => w * msTime.w;
 
 /** Analog of weeks */

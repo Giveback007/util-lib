@@ -1,10 +1,10 @@
-import { isType, anyObj } from '..';
+import { isType, AnyObj } from '..';
 
 export const snackBar = (item: any, time?: number) =>
 {
     const str = isType(item, 'string') ? item : JSON.stringify(item);
 
-    const stylesToString = (obj: anyObj) => Object.entries(
+    const stylesToString = (obj: AnyObj) => Object.entries(
         obj).reduce((s, x) => s + `${x[0]}: ${x[1]}; `, '');
 
     const body = document.getElementsByTagName('body').item(0);

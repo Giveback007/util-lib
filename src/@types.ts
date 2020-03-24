@@ -1,9 +1,9 @@
-export type anyObj = { [key: string]: any };
+export type AnyObj = { [key: string]: any };
 
-export type dictionary<T> = { [id: string]: T };
+export type Dict<T> = { [id: string]: T };
 
 /** string type keyof T */
-export type sKeys<T> = Extract<keyof T, string>;
+export type StrKeys<T> = Extract<keyof T, string>;
 
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 

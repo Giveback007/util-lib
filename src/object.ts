@@ -1,12 +1,12 @@
-import { anyObj } from '.';
-import { Omit, sKeys } from './@types';
+import { AnyObj } from '.';
+import { Omit, StrKeys } from './@types';
 
 /** Maps over an object just as a [ ].map would */
 export function objMap<
     T, O extends {}
->(o: O, funct: (keyVal: { key: sKeys<O>, val: O[sKeys<O>] }) => T)
+>(o: O, funct: (keyVal: { key: StrKeys<O>, val: O[StrKeys<O>] }) => T)
 {
-    const newObj = { } as { [P in sKeys<O>]: T };
+    const newObj = { } as { [P in StrKeys<O>]: T };
 
     for (const key in o) {
         newObj[key] = funct({ key, val: o[key] });
@@ -17,7 +17,10 @@ export function objMap<
 
 /** Filters out keys based on bool value returned by function */
 export function objFilter<O extends {}>(
-    o: O, funct: (keyVal: { key: sKeys<O>, val: O[sKeys<O>] }) => boolean
+    o: O, funct: (keyVal: {
+        key: StrKeys<O>,
+        val: O[StrKeys<O>]
+    }) => boolean
 )
 {
     const newObj = { ...o };
@@ -26,13 +29,13 @@ export function objFilter<O extends {}>(
         if (!funct({ key, val: o[key] })) delete newObj[key];
     }
 
-    return newObj as { [P in sKeys<O>]?: O[P] };
+    return newObj as { [P in StrKeys<O>]?: O[P] };
 }
 
 /** Removes all keys from object in the `filterOut` array */
-export function objRemoveKeys<T extends {}, K extends keyof T>(
-    obj: T, filterOut: K[]
-)
+export function objRemoveKeys<
+    T extends {}, K extends keyof T
+>(obj: T, filterOut: K[])
 {
     const newObj: T = { ...obj as any };
     filterOut.forEach((key) => delete newObj[key]);
@@ -40,11 +43,11 @@ export function objRemoveKeys<T extends {}, K extends keyof T>(
     return newObj as Omit<T, K>;
 }
 
-export function objKeys<T extends {}>(o: T): sKeys<T>[]
+export function objKeys<T extends {}>(o: T): StrKeys<T>[]
 {
-    if (Object.keys) return Object.keys(o) as sKeys<T>[];
+    if (Object.keys) return Object.keys(o) as StrKeys<T>[];
 
-    const keys: sKeys<T>[] = [];
+    const keys: StrKeys<T>[] = [];
     for (const k in o) keys.push(k);
 
     return keys;
@@ -77,7 +80,7 @@ export function objExtract<
  * @param path path to the desired value eg:
  *  "first.second.stuff" => obj.first.second.stuff
  */
-export const objResolve = (o: anyObj, path: string): any =>
+export const objResolve = (o: AnyObj, path: string): any =>
     path.split('.').reduce((prev, key) => prev[key], o);
 
 /**

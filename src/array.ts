@@ -1,5 +1,5 @@
 import {
-    anyObj, dictionary, isType, nonValue,
+    AnyObj, Dict, isType, nonValue,
     objRemoveKeys, objVals, equal,
 } from '.';
 
@@ -15,12 +15,12 @@ export const arrGen = <T = any>(length: number): T[] =>
  * => [{ id: '2' }]
  * Removes objects from array by obj[idKey]: 'stringId'
  */
-export function arrRemoveById<T extends anyObj>(
-    arr: T[], idKey: keyof T, idArr: string[]
-)
+export function arrRemoveById<
+    T extends AnyObj
+>(arr: T[], idKey: keyof T, idArr: string[])
 {
     const objDict = arrToDict(arr, idKey);
-    const keep: dictionary<T> = objRemoveKeys(objDict, idArr);
+    const keep: Dict<T> = objRemoveKeys(objDict, idArr);
 
     return objVals(keep);
 }
@@ -46,11 +46,12 @@ export const arrDeepFlatten = <T = any>(arr: any[]): T[] =>
 
 export function arrReplace<T>(arr: T[])
 {
+    const newArr = [ ...arr ];
     return {
         all: (item: T) => {
-            const newArr = [ ...arr ];
             const idxs: number[] = [];
-            arr.forEach((match, i) => equal(item, match) ? idxs.push(i) : null);
+            arr.forEach((match, i) =>
+                equal(item, match) ? idxs[i] = (i) : null);
 
             return {
                 with: (newItem: T) => {
@@ -62,7 +63,6 @@ export function arrReplace<T>(arr: T[])
             };
         },
         first: (item: T) => {
-            const newArr = [ ...arr ];
             const idx = arr.findIndex((match) => equal(item, match));
             return {
                 with: (newItem: T) => {
@@ -80,14 +80,15 @@ export function arrRemoveValues<T>(arr: T[], valsToRemove: any[])
 {
     let newArr = [ ...arr ];
     valsToRemove.forEach(removeVal =>
-        newArr = newArr.filter(x => x !== removeVal));
+        newArr = newArr.filter(x => !equal(x, removeVal))
+    );
 
     return newArr;
 }
 
-export function arrToDict<T extends anyObj>(arr: T[], idKey: keyof T)
+export function arrToDict<T extends AnyObj>(arr: T[], idKey: keyof T)
 {
-    const dict: dictionary<T> = { };
+    const dict: Dict<T> = { };
     arr.forEach((obj) => dict[obj[idKey]] = obj);
 
     return dict;
@@ -95,7 +96,7 @@ export function arrToDict<T extends anyObj>(arr: T[], idKey: keyof T)
 
 export function arrToIdxDict(arr: (number | string)[])
 {
-    const dict: dictionary<string> = { };
+    const dict: Dict<string> = { };
     arr.forEach((x, idx) => dict[x] = idx + '');
 
     return dict;
@@ -103,7 +104,7 @@ export function arrToIdxDict(arr: (number | string)[])
 
 export function arrToBoolDict(arr: (string | number)[])
 {
-    const dict: dictionary<boolean> = { };
+    const dict: Dict<boolean> = { };
     arr.forEach((x) => dict[x] = true);
 
     return dict;

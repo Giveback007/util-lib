@@ -19,8 +19,11 @@ export const average = (nArr: number[]) =>
  * @param places - number of decimal places to round to
  * @example decPlaces(1.1276, 2) => 1.13
  */
-export const decPlace = (n: number, places: number) =>
-    Math.round(n * (10 * places)) / (10 * places);
+export const decPlace = (n: number, places: number) => Number(n.toFixed(places))
+
+/** @example numberWithCommas(1000000) => '1,000,000' */
+export const numberWithCommas = (n: number | string) =>
+    n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
 /** Takes a number || number[] and maxIdx, will generate a new random idx */
 export function newRandIdx(prevIdx: number | number[], maxIdx: number)
@@ -64,6 +67,3 @@ export function newNumFromRange(
 
     return num;
 }
-
-export const numberWithCommas = (n: number | string) =>
-    n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');

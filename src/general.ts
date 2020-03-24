@@ -1,23 +1,25 @@
 import { JsType, isType } from '.';
 
-
+/**
+ * @example interval((i) => console.log('The index is: ' + i), 1000, 2) =>
+ * // 'The index is: 0' // 'The index is: 2'
+ */
 export const interval = (
-    funct: Function,
+    funct: (i: number) => any,
     time: number,
     times?: number
 ) =>
 {
     if (isType(times, 'number') && times < 1)
-        throw Error('argument times can\'t be less than 1');
+        throw Error('argument "times" can\'t be less than 1');
 
-    let t = 0;
+    let i = 0;
     const intv = setInterval(() => {
-        funct();
+        funct(i);
 
         if (isType(times, 'number')) {
-            t += 1;
-            if (t >= times) // check if this works as expected
-                clearInterval(intv);
+            i += 1;
+            if (i >= times) clearInterval(intv);
         }
     }, time)
 
@@ -26,8 +28,8 @@ export const interval = (
     }
 }
 
-/** A promise that waits n amount of milliseconds to execute */
-export const wait = (ms: number) =>
+/** A promise that waits `ms` amount of milliseconds to execute */
+export const wait = (ms: number): Promise<void> =>
     new Promise((res) => setTimeout(() => res(), ms));
 
 /**

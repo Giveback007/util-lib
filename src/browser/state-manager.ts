@@ -1,5 +1,5 @@
 import {
-  dictionary, Optional, objKeyVals, uiid, wait,
+  Dict, Optional, objKeyVals, uiid, wait,
   objVals, equal, objExtract,
 } from '..';
 
@@ -24,7 +24,7 @@ export class StateManager<
   private readonly useLS:
     lsOptions<Key> | false = false;
 
-  private subscriptions: dictionary<
+  private subscriptions: Dict<
     (s: State, prev: State) => any
   > = { };
 

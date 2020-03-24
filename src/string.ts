@@ -2,5 +2,5 @@
 export const strIncludes = (str: string, subStr: string) =>
     str.indexOf(subStr) !== -1;
 
-export const strRemove = (str: string, remove: string) =>
+export const strRemove = (str: string, remove: string | RegExp) =>
     str.replace(new RegExp(remove, 'g'), '');
