@@ -36,13 +36,17 @@ export function arrDivide<T>(arr: T[], maxRowLength: number): T[][]
     return newArr;
 }
 
-/** [[[1, [1.1]], 2, 3], [4, 5]] => [[1, [1.1]], 2, 3, 4, 5] */
-export const arrFlatten = <T = any>(arr: any[]): T[] => [].concat.apply([], arr);
+/** @example [[[1, [1.1]], 2, 3], [4, 5]] => [[1, [1.1]], 2, 3, 4, 5] */
+export function arrFlatten<T>(arr: T[][]): T[];
+export function arrFlatten(arr: any[]): any[];
+export function arrFlatten(arr: any[]): any[] {
+    return [].concat.apply([], arr);
+}
 
-/** [[[1, [1.1]], 2, 3], [4, 5]] => [1, 1.1, 2, 3, 4, 5] */
+/** @example [[[1, [1.1]], 2, 3], [4, 5]] => [1, 1.1, 2, 3, 4, 5] */
 export const arrDeepFlatten = <T = any>(arr: any[]): T[] =>
     arr.reduce((newArr: any[], x) =>
-        newArr.concat(isType(x, 'array') ?arrDeepFlatten(x) : x), []);
+        newArr.concat(isType(x, 'array') ? arrDeepFlatten(x) : x), []);
 
 export function arrReplace<T>(arr: T[])
 {
