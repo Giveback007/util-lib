@@ -84,5 +84,14 @@ export const uiid = () =>
     });
 }
 
-export const randomColoHex = () =>
+export const randomColorHex = () =>
     '#' + ((1<<24)*Math.random()|0).toString(16);
+
+export function strToFnt(fStr: string) {
+    const x = fStr.slice(fStr.indexOf('('));
+    const start = x.slice(0, x.indexOf(')') + 1);
+    const end = x.slice(x.indexOf(')') + 1);
+
+    // tslint:disable-next-line: no-eval
+    return eval(start + ' =>' + end);
+}

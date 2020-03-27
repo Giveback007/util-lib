@@ -1,5 +1,5 @@
 import { AnyObj } from '.';
-import { Omit, StrKeys } from './@types';
+import { Omit, StrKeys, ResolvedValue, Dict } from './@types';
 
 /** Maps over an object just as a [ ].map would */
 export function objMap<
@@ -94,4 +94,24 @@ export const objSortKeys = <T extends {}>(o: T, compareFn?: (a: keyof T, b: keyo
     keys.map((k) => newObj[k] = o[k]);
 
     return newObj;
+}
+
+/**
+ * Takes a dictionary/object made of Promises and Observables and extracts all values.
+ * This function will initiate every Observable/Promise simultaneously.
+ */
+export function objPromiseAll<T extends Dict<Promise<any>>>(obj: T) {
+    const keyValues = objKeyVals(obj);
+    const toEqual = keyValues.length;
+    const values = { } as { [P in keyof T]: ResolvedValue<T[P]> };
+
+    let total = 0;
+    return new Promise<typeof values>((resolve) =>
+        keyValues.forEach(({ key, val: x }) => x.then((data) => {
+            values[key] = data;
+            total++;
+
+            if (toEqual === total) resolve(values);
+        }))
+    );
 }
