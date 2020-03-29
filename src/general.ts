@@ -2,7 +2,7 @@ import { JsType, isType } from '.';
 
 /**
  * @example interval((i) => console.log('The index is: ' + i), 1000, 2) =>
- * // 'The index is: 0' // 'The index is: 2'
+ * // 'The index is: 0' // 'The index is: 1'
  */
 export const interval = (
     funct: (i: number) => any,
@@ -55,9 +55,14 @@ export function type(val: any): JsType
     }
 }
 
-export const viewSize = ({
-    innerWidth, innerHeight
-} = window) => ({ width: innerWidth, height: innerHeight });
+// https://httptoolkit.tech/blog/5-big-features-of-typescript-3.7#assert-signatures
+export function assertType<T extends JsType>(val: any, types: T | T[]): asserts val is T
+{
+    if (!isType(types, 'array')) types = [types];
+    for (const t of types) if (isType(val, t)) return;
+
+    throw Error(`value needs to be of type ${types.join(' || ')}`)
+}
 
 export const uiid = () =>
 {
@@ -85,8 +90,9 @@ export const uiid = () =>
 }
 
 export const randomColorHex = () =>
-    '#' + ((1<<24)*Math.random()|0).toString(16);
+    '#' + ((1<<24)*Math.random() | 0).toString(16);
 
+// TODO: include async functions
 export function strToFnt(fStr: string) {
     const x = fStr.slice(fStr.indexOf('('));
     const start = x.slice(0, x.indexOf(')') + 1);

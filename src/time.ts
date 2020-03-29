@@ -115,7 +115,11 @@ export const wks = weeks;
  * Get unixMs for a given date/time, input time is in UTC
  * @example unixMs('2015-01-02') => 1420128000000
  */
-export const unixMs = (time: string) => moment(time).utc().valueOf();
+export const unixMs = (time: string) =>
+{
+    const a = time.split('-').map((n) => Number(n));
+    return new Date(a[0], a[1], a[2]).getTime();
+}
 
 /** Gives the 'start' and 'end' milliseconds of a unix day */
 export const dayStartEnd = (unixMsTime: number) =>
