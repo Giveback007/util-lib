@@ -35,7 +35,7 @@ export const wait = (ms: number): Promise<void> =>
 /**
  * An alternative to console.log in that it will clone the obj.
  *
- * Useful for when need to see the object in a specific state instance.
+ * Useful for when it is need to see the object in a specific state instance.
  */
 export const cloneLog = (x: any) => console.log(clone(x));
 
