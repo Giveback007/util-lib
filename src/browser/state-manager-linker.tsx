@@ -1,5 +1,5 @@
 import React = require('react');
-import { clone, equal } from '..';
+import { equal } from '..';
 import { ComponentType, FunctionComponent, ComponentClass } from 'react';
 import { StateManager } from '.';
 
@@ -23,8 +23,6 @@ export function stateLinker<S>(store: StateManager<S>)
             !equal(nextProps.childProps, this.props.childProps)
 
         render() {
-            console.log('render', clone({ ...this.state, ...this.props }));
-
             // tslint:disable-next-line: variable-name
             const Child: ComponentType<ChildProps & M> = this.props.Child as any;
             return <Child {...{ ...this.state, ...this.props.childProps }} />;
