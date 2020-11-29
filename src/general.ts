@@ -1,4 +1,4 @@
-import { JsType, isType } from '.';
+import { JsType, isType, objMap, hasKey, AnyObj } from '.';
 
 /**
  * @example interval((i) => console.log('The index is: ' + i), 1000, 2) =>
@@ -27,6 +27,17 @@ export const interval = (
 /** A promise that waits `ms` amount of milliseconds to execute */
 export const wait = (ms: number): Promise<void> =>
     new Promise((res) => setTimeout(() => res(), ms));
+
+const usubAllFunct = (x: any) =>
+    isType(x, 'object') && hasKey(x, 'unsubscribe') ? x.unsubscribe() : null;
+export function unsubAll(objOrArr: AnyObj | any[]) {
+    if (isType(objOrArr, 'array'))
+        objOrArr.forEach(x => usubAllFunct(x));
+    else if (isType(objOrArr, 'object'))
+        objMap(objOrArr, ({ val }) => usubAllFunct(val));
+    else
+        throw Error('argument "objOrArr" must be of type "object" or "array"');
+}
 
 /**
  * An alternative to console.log in that it will clone the obj.

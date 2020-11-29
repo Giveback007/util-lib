@@ -1,6 +1,6 @@
 {
   "name": "@giveback007/util-lib",
-  "version": "0.16.4",
+  "version": "0.16.6",
   "description": "Small util function library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -28,10 +28,10 @@
   },
   "homepage": "https://github.com/Giveback007/util-lib#readme",
   "dependencies": {
-    "react-dom": "~16.13.1",
+    "moment-timezone": "~0.5.28",
     "react": "~16.13.1",
-    "tslib": "~1.11.1",
-    "moment-timezone": "~0.5.28"
+    "react-dom": "~16.13.1",
+    "tslib": "~1.11.1"
   },
   "devDependencies": {
     "@types/jest": "^24.1.4",
