@@ -79,7 +79,7 @@ export class StateManager<State, Key extends keyof State = keyof State>
 
   getState = () => this.state;
 
-  async setState(updateState: Optional<State>)
+  setState = async (updateState: Optional<State>) =>
   {
     const newState = { ...this.state };
 
