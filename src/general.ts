@@ -6,7 +6,7 @@ import { JsType, isType } from '.';
  */
 export const interval = (
     funct: (i: number) => any,
-    time: number,
+    ms: number,
     times?: number
 ) =>
 {
@@ -16,16 +16,12 @@ export const interval = (
     let i = 0;
     const intv = setInterval(() => {
         funct(i);
+        i++;
 
-        if (isType(times, 'number')) {
-            i += 1;
-            if (i >= times) clearInterval(intv);
-        }
-    }, time)
+        if (times && i >= times) clearInterval(intv);
+    }, ms);
 
-    return {
-        stop: () => clearInterval(intv),
-    }
+    return { stop: () => clearInterval(intv) };
 }
 
 /** A promise that waits `ms` amount of milliseconds to execute */

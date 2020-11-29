@@ -117,7 +117,7 @@ export const wks = weeks;
  */
 export const unixMs = (time: string) =>
 {
-    const a = time.split('-').map((n) => Number(n));
+    const a = time.split('-').map((n) => parseFloat(n));
     return new Date(a[0], a[1], a[2]).getTime();
 }
 

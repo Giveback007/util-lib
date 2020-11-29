@@ -85,9 +85,7 @@ export class StateManager<
 
   getState = () => this.state;
 
-  setState = (
-    updateState: Optional<State>
-  ): State =>
+  async setState(updateState: Optional<State>)
   {
     const newState = { ...this.state };
 
@@ -96,9 +94,9 @@ export class StateManager<
 
     const prevState = this.state;
     this.state = newState;
-    this.stateChanged(prevState);
+    await this.stateChanged(prevState);
 
-    return newState;
+    return this.getState();
   }
 
   /**

@@ -19,7 +19,7 @@ export const average = (nArr: number[]) =>
  * @param places - number of decimal places to round to
  * @example decPlaces(1.1276, 2) => 1.13
  */
-export const decPlace = (n: number, places: number) => Number(n.toFixed(places))
+export const decPlace = (n: number, places: number) => parseFloat(n.toFixed(places));
 
 /** @example numberWithCommas(1000000) => '1,000,000' */
 export const numberWithCommas = (n: number | string) =>
