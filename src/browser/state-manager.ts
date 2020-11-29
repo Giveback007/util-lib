@@ -2,17 +2,13 @@ import {
   Dict, Optional, objKeyVals, uiid, wait,
   objVals, equal, objExtract,
 } from '..';
+import { isType } from '../test';
 
-type lsOptions<P> =
-{
-  id: string, useKeys?: P[], ignoreKeys?: P[]
-};
+type lsOptions<P> = { id: string, useKeys?: P[], ignoreKeys?: P[] };
 
 const LS_KEY = '-utilStateManager';
 
-export class StateManager<
-  State, Key extends keyof State = keyof State
->
+export class StateManager<State, Key extends keyof State = keyof State>
 {
   /**
    * emittedState is used to check if an emit is
@@ -41,9 +37,7 @@ export class StateManager<
     let state = { } as State;
 
     if (useLocalStorage) {
-      const {
-        useKeys, ignoreKeys, id
-      } = useLocalStorage;
+      const { useKeys, ignoreKeys, id } = useLocalStorage;
 
       if (useKeys && ignoreKeys) throw Error(
         '\'useKeys\' & \'ignoreKeys\' are'
@@ -127,26 +121,45 @@ export class StateManager<
 
     if (key) {
       f = (s: State, prev: State) => {
-        // ensuring the function only fires only
+        // ensuring the function only fires
         // on a state change on a given key
-        if (equal(
-          this.emittedState[key],
-          this.state[key]
-        )) return;
-
-        funct(
-          (s as any)[key],
-          (prev as any)[key]
-        );
+        if (
+          !equal(this.emittedState[key], this.state[key])
+        ) funct((s as any)[key], (prev as any)[key]);
       }
     } else f = funct as any;
 
     this.subscriptions[id] = f;
 
     return {
-      unsubscribe: () =>
-        delete this.subscriptions[id]
+      unsubscribe: () => delete this.subscriptions[id]
     };
+  }
+
+  subToKeys<K extends Key = Key>(
+    keys: K[] | K,
+    funct: (s: State, prev: State) => any
+  ) {
+    if (isType(keys, 'array') && keys.length === 1) keys = keys[0];
+
+    const id = uiid();
+    let f: (s: State, prev: State) => any;
+
+    if (isType(keys, 'string')) f = (s: State, prev: State) => {
+      if (
+        !equal(this.emittedState[keys as K], this.state[keys as K])
+      ) funct(s, prev);
+    }
+
+    else f = (s: State, prev: State) => {
+      for (const k of keys as K[])
+        if (!equal(this.emittedState[k], this.state[k]))
+          return funct(s, prev);
+    }
+
+    this.subscriptions[id] = f;
+
+    return { unsubscribe: () => delete this.subscriptions[id] };
   }
 
   private stateChanged = async (
@@ -157,15 +170,11 @@ export class StateManager<
     // code updates the state
     await wait(0);
 
-    if (equal(
-      this.emittedState,
-      this.state
-    )) return;
+    if (equal(this.emittedState, this.state)) return;
 
     this.updateLocalStorage();
 
-    objVals(this.subscriptions).forEach((f) =>
-      f(this.state, prevState));
+    objVals(this.subscriptions).forEach((f) => f(this.state, prevState));
 
     this.emittedState = this.state;
   }
@@ -185,20 +194,15 @@ export class StateManager<
   {
     if (!this.useLS) return;
 
-    const {
-      id,
-      ignoreKeys,
-      useKeys
-    } = this.useLS;
+    const { id, ignoreKeys, useKeys } = this.useLS;
 
     let state: State = { ...this.state };
 
-    if (ignoreKeys) ignoreKeys
-      .forEach((key) => delete state[key]);
+    if (ignoreKeys)
+      ignoreKeys.forEach((key) => delete state[key]);
     else if (useKeys)
       state = objExtract(state, useKeys);
 
-    localStorage
-      .setItem(id, JSON.stringify(state));
+    localStorage.setItem(id, JSON.stringify(state));
   }
 }
