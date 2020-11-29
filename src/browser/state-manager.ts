@@ -93,53 +93,21 @@ export class StateManager<State, Key extends keyof State = keyof State>
     return this.getState();
   }
 
-  /**
-   * Will execute the given function on state
-   * change, can subscribe to a particular key
-   * in the state
-   */
-  // -- //
-  subscribe(
-    funct: (s: State, prev: State) => any
-  ): { unsubscribe: () => boolean; }
-  // -- //
-  subscribe<K extends Key = Key>(
-    funct: (s: State[K], prev: State[K]) => any,
-    key: K
-  ): { unsubscribe: () => boolean; }
-  // -- //
-  subscribe<K extends Key = Key>(
-    funct:
-      ((s: State[K], prev: State[K]) => any)
-      |
-      ((s: State, prev: State) => any),
-    key?: K
-  )
+  /** Will execute the given function on state change */
+  subscribe = (funct: (s: State, prev: State) => any) =>
   {
     const id = uiid();
-    let f: (s: State, prev: State) => any;
-
-    if (key) {
-      f = (s: State, prev: State) => {
-        // ensuring the function only fires
-        // on a state change on a given key
-        if (
-          !equal(this.emittedState[key], this.state[key])
-        ) funct((s as any)[key], (prev as any)[key]);
-      }
-    } else f = funct as any;
-
-    this.subscriptions[id] = f;
+    this.subscriptions[id] = funct;
 
     return {
       unsubscribe: () => delete this.subscriptions[id]
     };
   }
 
-  subToKeys<K extends Key = Key>(
-    keys: K[] | K,
-    funct: (s: State, prev: State) => any
-  ) {
+  /** Subscribe only to specific key(s) changes in state */
+  subToKeys = <K extends Key = Key>(
+    keys: K[] | K, funct: (s: State, prev: State) => any
+  ) => {
     if (isType(keys, 'array') && keys.length === 1) keys = keys[0];
 
     const id = uiid();
@@ -179,7 +147,7 @@ export class StateManager<State, Key extends keyof State = keyof State>
     this.emittedState = this.state;
   }
 
-  private stateFromLS()
+  private stateFromLS = () =>
   {
     if (!this.useLS) return;
 
