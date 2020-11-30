@@ -47,7 +47,7 @@ export function unsubAll(objOrArr: AnyObj | any[]) {
 export const cloneLog = (x: any) => console.log(clone(x));
 
 /** Creates a copy of the object trough JSON stringify and parse */
-export const clone = <T>(item: T) => JSON.parse(JSON.stringify(item));
+export const clone = <T>(item: T): T => JSON.parse(JSON.stringify(item));
 
 /** An improved version of native `typeof` */
 export function type(val: any): JsType
