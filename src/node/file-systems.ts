@@ -1,5 +1,5 @@
-import fs = require('fs');
-import fsPath = require('path');
+import * as fs from 'fs';
+import * as fsPath from 'path';
 
 export const deleteFile = (path: string) =>
 {

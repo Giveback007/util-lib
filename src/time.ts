@@ -1,4 +1,4 @@
-import moment = require('moment-timezone');
+// import * as moment from 'moment-timezone';
 
 export type MsTime = {
     /** second */
@@ -121,48 +121,48 @@ export const unixMs = (time: string) =>
     return new Date(a[0], a[1], a[2]).getTime();
 }
 
-/** Gives the 'start' and 'end' milliseconds of a unix day */
-export const dayStartEnd = (unixMsTime: number) =>
-{
-    const t = moment(unixMsTime).utc();
+// /** Gives the 'start' and 'end' milliseconds of a unix day */
+// export const dayStartEnd = (unixMsTime: number) =>
+// {
+//     const t = moment(unixMsTime).utc();
 
-    t.set({ h: 0, m: 0, s: 0, ms: 0 });
-    const start = t.valueOf();
+//     t.set({ h: 0, m: 0, s: 0, ms: 0 });
+//     const start = t.valueOf();
 
-    t.set({ h: 23, m: 59, s: 59, ms: 999 });
-    const end = t.valueOf();
+//     t.set({ h: 23, m: 59, s: 59, ms: 999 });
+//     const end = t.valueOf();
 
-	return { start, end };
-}
+// 	return { start, end };
+// }
 
-/** Gives the 'start' and 'end' milliseconds of a unix month */
-export const monthStartEnd = (unixMsTime: number): {
-    start: number;
-    end: number;
-} =>
-{
-    const year = moment(unixMsTime).utc().year();
-    const month = ('0' + (moment(unixMsTime).utc().month() + 1)).slice(-2);
+// /** Gives the 'start' and 'end' milliseconds of a unix month */
+// export const monthStartEnd = (unixMsTime: number): {
+//     start: number;
+//     end: number;
+// } =>
+// {
+//     const year = moment(unixMsTime).utc().year();
+//     const month = ('0' + (moment(unixMsTime).utc().month() + 1)).slice(-2);
 
-    const s = moment(`${year}-${month}-01`).set({ h: 0, m: 0, s: 0, ms: 0 });
-    const start = s.valueOf() + min(s.utcOffset());
+//     const s = moment(`${year}-${month}-01`).set({ h: 0, m: 0, s: 0, ms: 0 });
+//     const start = s.valueOf() + min(s.utcOffset());
 
-    const e = moment(`${year}-${month}-31`).set({ h: 23, m: 59, s: 59, ms: 999 });
-    const end = e.valueOf() + min(e.utcOffset());
+//     const e = moment(`${year}-${month}-31`).set({ h: 23, m: 59, s: 59, ms: 999 });
+//     const end = e.valueOf() + min(e.utcOffset());
 
-    return { start, end };
-}
+//     return { start, end };
+// }
 
-/** Gives the 'start' and 'end' milliseconds of a unix year */
-export const yearStartEnd = (unixMsTime: number) =>
-{
-    const year = moment(unixMsTime).utc().year();
+// /** Gives the 'start' and 'end' milliseconds of a unix year */
+// export const yearStartEnd = (unixMsTime: number) =>
+// {
+//     const year = moment(unixMsTime).utc().year();
 
-    const s = moment(`${year}-01-01`).set({ h: 0, m: 0, s: 0, ms: 0 });
-    const start = s.valueOf() + min(s.utcOffset());
+//     const s = moment(`${year}-01-01`).set({ h: 0, m: 0, s: 0, ms: 0 });
+//     const start = s.valueOf() + min(s.utcOffset());
 
-    const e = moment(`${year}-12-31`).set({ h: 23, m: 59, s: 59, ms: 999 });
-    const end = e.valueOf() + min(e.utcOffset());
+//     const e = moment(`${year}-12-31`).set({ h: 23, m: 59, s: 59, ms: 999 });
+//     const end = e.valueOf() + min(e.utcOffset());
 
-    return { start, end };
-}
+//     return { start, end };
+// }
