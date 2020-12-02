@@ -1,5 +1,4 @@
-import { AnyObj } from '.';
-import { Omit, StrKeys, ResolvedValue, Dict } from './@types';
+import type { Omit, StrKeys, ResolvedValue, Dict, AnyObj } from './@types';
 
 /** Maps over an object just as a [ ].map would */
 export function objMap<
