@@ -9,15 +9,15 @@ type xyz = { x: number, y: number, z: number };
  * each cycle would return an object eg:
  *
  * xLength 3, yLength: 3, zLength: 3
- *
+ * ```ts
  * { 0, 0, 0 } ... { 0, 0, 1 } ... { 0, 0, 2 }
  *
  * { 0, 1, 0 } ... { 0, 1, 1 } ... { 0, 1, 2 }
- *
+ * ```
  * ...
- *
+ * ```ts
  * { 2, 2, 0 } ... { 2, 2, 1 } ... { 2, 2, 2 } <- last object
- *
+ * ```
  * Starting index is 0
  */
 export function iterate(xLength: number): {

@@ -78,7 +78,9 @@ export function objExtract<
 /**
  * @param o the object that is to be resolved
  * @param path path to the desired value eg:
+ * ```ts
  *  "first.second.stuff" => obj.first.second.stuff
+ * ```
  */
 export const objResolve = (o: AnyObj, path: string): any =>
     path.split('.').reduce((prev, key) => prev[key], o);
