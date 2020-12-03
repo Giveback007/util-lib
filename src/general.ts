@@ -1,3 +1,4 @@
+import fetchJsonp from 'fetch-jsonp';
 import { JsType, isType, objMap, hasKey, AnyObj } from '.';
 
 /**
@@ -29,7 +30,9 @@ export const wait = (ms: number): Promise<void> =>
     new Promise((res) => setTimeout(() => res(), ms));
 
 const usubAllFunct = (x: any) =>
-    isType(x, 'object') && hasKey(x, 'unsubscribe') ? x.unsubscribe() : null;
+    isType(x, 'object')
+    &&
+    hasKey(x, 'unsubscribe') ? x.unsubscribe() : null;
 export function unsubAll(objOrArr: AnyObj | any[]) {
     if (isType(objOrArr, 'array'))
         objOrArr.forEach(x => usubAllFunct(x));
@@ -40,14 +43,16 @@ export function unsubAll(objOrArr: AnyObj | any[]) {
 }
 
 /**
- * An alternative to console.log in that it will clone the obj.
+ * Alternative to console.log in that it will clone the obj.
  *
- * Useful for when it is need to see the object in a specific state instance.
+ * Useful for when it is need to see the object in a specific
+ * state instance.
  */
 export const cloneLog = (x: any) => console.log(clone(x));
 
-/** Creates a copy of the object trough JSON stringify and parse */
-export const clone = <T>(item: T): T => JSON.parse(JSON.stringify(item));
+/** Creates a copy of using JSON stringify and parse */
+export const clone = <T>(item: T): T =>
+    JSON.parse(JSON.stringify(item));
 
 /** An improved version of native `typeof` */
 export function type(val: any): JsType
@@ -63,8 +68,10 @@ export function type(val: any): JsType
 }
 
 // https://httptoolkit.tech/blog/5-big-features-of-typescript-3.7#assert-signatures
-export function assertType<T extends JsType>(val: any, types: T | T[]): asserts val is T
-{
+export function assertType<T extends JsType>(
+    val: any,
+    types: T | T[]
+): asserts val is T {
     if (!isType(types, 'array')) types = [types];
     for (const t of types) if (isType(val, t)) return;
 
@@ -82,7 +89,8 @@ export const uiid = () =>
         (performance.now() * 1000)
     ) || 0;
 
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const str = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+    return str.replace(/[xy]/g, (c) => {
         let r = Math.random() * 16;
         if (d > 0) {
             r = (d + r)%16 | 0;
@@ -98,6 +106,11 @@ export const uiid = () =>
 
 export const randomColorHex = () =>
     '#' + ((1<<24)*Math.random() | 0).toString(16);
+
+export const jsonp = async <T = any>(
+    url: string,
+    options?: fetchJsonp.Options
+) => (await fetchJsonp(url, options)).json<T>();
 
 // // TODO: include async functions
 // export function strToFnt(fStr: string) {

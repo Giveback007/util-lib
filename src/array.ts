@@ -25,28 +25,40 @@ export function arrRemoveById<
     return objVals(keep);
 }
 
-/** Divides the array in to multiple arrays arr.length/rowLength */
-export function arrDivide<T>(arr: T[], maxRowLength: number): T[][]
-{
+/**
+ * Divides the array in to multiple arrays
+ * arr.length/rowLength
+ */
+export function arrDivide<T>(
+    arr: T[],
+    maxRowLength: number
+): T[][] {
     const rows = Math.ceil(arr.length / maxRowLength);
     const newArr = arrGen(rows).map(() => ([] as T[]));
 
-    arr.forEach((x, i) => newArr[Math.floor(i / maxRowLength)].push(x));
+    arr.forEach((x, i) =>
+        newArr[Math.floor(i / maxRowLength)].push(x));
 
     return newArr;
 }
 
-/** @example [[[1, [1.1]], 2, 3], [4, 5]] => [[1, [1.1]], 2, 3, 4, 5] */
+/**
+ * @example [[[1, [1.1]], 2, 3], [4, 5]] =>
+ * [[1, [1.1]], 2, 3, 4, 5]
+ */
 export function arrFlatten<T>(arr: T[][]): T[];
 export function arrFlatten(arr: any[]): any[];
 export function arrFlatten(arr: any[]): any[] {
     return [].concat.apply([], arr);
 }
 
-/** @example [[[1, [1.1]], 2, 3], [4, 5]] => [1, 1.1, 2, 3, 4, 5] */
+/**
+ * @example [[[1, [1.1]], 2, 3], [4, 5]] =>
+ * [1, 1.1, 2, 3, 4, 5]
+ */
 export const arrDeepFlatten = <T = any>(arr: any[]): T[] =>
-    arr.reduce((newArr: any[], x) =>
-        newArr.concat(isType(x, 'array') ? arrDeepFlatten(x) : x), []);
+    arr.reduce((newArr: any[], x) => newArr.concat(
+        isType(x, 'array') ? arrDeepFlatten(x) : x), []);
 
 export function arrReplace<T>(arr: T[])
 {
@@ -67,7 +79,9 @@ export function arrReplace<T>(arr: T[])
             };
         },
         first: (item: T) => {
-            const idx = arr.findIndex((match) => equal(item, match));
+            const idx = arr.findIndex(
+                (match) => equal(item, match));
+
             return {
                 with: (newItem: T) => {
                     if (nonValue(idx)) return arr;
@@ -80,8 +94,10 @@ export function arrReplace<T>(arr: T[])
     };
 }
 
-export function arrRemoveValues<T>(arr: T[], valsToRemove: any[])
-{
+export function arrRemoveValues<T>(
+    arr: T[],
+    valsToRemove: any[]
+) {
     let newArr = [ ...arr ];
     valsToRemove.forEach(removeVal =>
         newArr = newArr.filter(x => !equal(x, removeVal))
@@ -90,8 +106,10 @@ export function arrRemoveValues<T>(arr: T[], valsToRemove: any[])
     return newArr;
 }
 
-export function arrToDict<T extends AnyObj>(arr: T[], idKey: keyof T)
-{
+export function arrToDict<T extends AnyObj>(
+    arr: T[],
+    idKey: keyof T
+) {
     const dict: Dict<T> = { };
     arr.forEach((obj) => dict[obj[idKey]] = obj);
 

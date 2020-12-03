@@ -7,9 +7,11 @@
         "idxs",
         "tslib",
         "uiid",
+        "unsub",
+        "usub",
         "yxxx"
     ],
-    "editor.rulers": [49, 80],
+    "editor.rulers": [62],
     "typescript.tsdk": "node_modules\\typescript\\lib",
     "tslint.alwaysShowRuleFailuresAsWarnings": true,
     "tslint.exclude": "**/node_modules/**/*",

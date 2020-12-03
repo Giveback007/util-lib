@@ -7,9 +7,11 @@ export type StrKeys<T> = Extract<keyof T, string>;
 
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
-export type Optional<T, K extends keyof T = keyof T> = { [P in K]?: T[P] };
+export type Optional<T, K extends keyof T = keyof T> =
+    { [P in K]?: T[P] };
 
-export type ResolvedValue<T> = T extends Promise <infer U> ? U : any;
+export type ResolvedValue<T> =
+    T extends Promise <infer U> ? U : any;
 
 export type JsType =
     | 'array'
