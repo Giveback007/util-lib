@@ -31,15 +31,22 @@ export function hasKeys<
  *
  * @param val value to be tested
  * @param testType to check if typeof val === testType
- * @example * isType([], 'array') => true
+ * @example
+ * ```js
+ * isType([], 'array') //=> true
+ * isType(null, 'undefined') //=> false
+ * ```
  */
 export const isType = <
   T extends JsType
 > (val: any, testType: T): val is JsTypeFind<T> => type(val) === testType;
 
 /** any of the values in the first "example" return `true`
- * @example nullOrEmpty(null | undefined | '' | [ ] | { }) => true
- * @example nullOrEmpty([1, 2] | { key: 'value' }) => false
+ * @example 
+ * ```js
+ * nullOrEmpty(null | undefined | '' | [ ] | { }) //=> true
+ * nullOrEmpty([1, 2] | { key: 'value' } | true) //=> false
+ * ```
  */
 export function nullOrEmpty(x: any): boolean
 {

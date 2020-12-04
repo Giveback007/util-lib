@@ -2,8 +2,11 @@ import fetchJsonp from 'fetch-jsonp';
 import { JsType, isType, objMap, hasKey, AnyObj } from '.';
 
 /**
- * @example interval((i) => console.log('The index is: ' + i), 1000, 2) =>
- * // 'The index is: 0' // 'The index is: 1'
+ * @example 
+ * ```js
+ * interval((i) => console.log('The index is: ' + i), 1000, 2) =>
+ * //=> 'The index is: 0' //=> 'The index is: 1'
+ * ```
  */
 export const interval = (
     funct: (i: number) => any,
