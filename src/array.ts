@@ -8,21 +8,39 @@ export const arrGen = <T = any>(length: number): T[] =>
     Array(length).fill(null);
 
 /**
- * @param idArr Array of ids to remove. Eg: ['1']
- * @param idKey Key to the obj id prop. Eg: 'id'
- * @param arr Array of objects. Eg: [{ id: '1' }, { id: '2' }]
- *
- * => [{ id: '2' }]
- * Removes objects from array by obj[idKey]: 'stringId'
+ * Returns a new array without mutating the provided one.
+ * 
+ * @example
+ * ```js 
+ * const arr = [{ id: '1' }, { id: '2' }]
+ * arrRemoveById(arr, ['1'], 'id') //=> [{ id: '2' }]
+ * ```
  */
 export function arrRemoveById<
     T extends AnyObj
->(arr: T[], idKey: keyof T, idArr: string[])
+>(arr: T[], idArr: string[], idKey: keyof T = 'id')
 {
     const objDict = arrToDict(arr, idKey);
     const keep: Dict<T> = objRemoveKeys(objDict, idArr);
 
     return objVals(keep);
+}
+
+/** 
+ * Gets values out of `arr` that match the ids in `idArr`
+ * 
+ * @example
+ * ```js 
+ * const arr = [{ id: '1' }, { id: '2' }, { id: '3' }]
+ * arrGetByIds(arr, ['1', '2'], 'id')
+ * //=> [{ id: '1' }, { id: '2' }]
+ * ```
+ * */
+export function arrGetByIds<
+    T extends AnyObj
+>(arr: T[], idArr: string[], idKey: keyof T = 'id') {
+    const dict = arrToBoolDict(idArr);
+    return arr.filter((x) => dict[x[idKey]]);
 }
 
 /**
@@ -43,8 +61,11 @@ export function arrDivide<T>(
 }
 
 /**
- * @example [[[1, [1.1]], 2, 3], [4, 5]] =>
- * [[1, [1.1]], 2, 3, 4, 5]
+ * @example 
+ * ```js
+ * arrFlatten([[[1, [1.1]], 2, 3], [4, 5]])
+ * //=> [[1, [1.1]], 2, 3, 4, 5]
+ * ```
  */
 export function arrFlatten<T>(arr: T[][]): T[];
 export function arrFlatten(arr: any[]): any[];
@@ -53,8 +74,11 @@ export function arrFlatten(arr: any[]): any[] {
 }
 
 /**
- * @example [[[1, [1.1]], 2, 3], [4, 5]] =>
- * [1, 1.1, 2, 3, 4, 5]
+ * @example 
+ * ```js
+ * arrDeepFlatten([[[1, [1.1]], 2, 3], [4, 5]])
+ * //=> [1, 1.1, 2, 3, 4, 5]
+ * ```
  */
 export const arrDeepFlatten = <T = any>(arr: any[]): T[] =>
     arr.reduce((newArr: any[], x) => newArr.concat(

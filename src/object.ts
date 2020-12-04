@@ -1,6 +1,6 @@
 import type { Omit, StrKeys, ResolvedValue, Dict, AnyObj } from './@types';
 
-/** Maps over an object just as a [ ].map would */
+/** Maps over an object just as a [ ].map would on an array */
 export function objMap<
     T, O extends {}
 >(o: O, funct: (keyVal: { key: StrKeys<O>, val: O[StrKeys<O>] }) => T)
@@ -31,7 +31,10 @@ export function objFilter<O extends {}>(
     return newObj as { [P in StrKeys<O>]?: O[P] };
 }
 
-/** Removes all keys from object in the `filterOut` array */
+/** 
+ * Removes all keys from object in the `filterOut` array.
+ * The original object is not mutated.
+ * */
 export function objRemoveKeys<
     T extends {}, K extends keyof T
 >(obj: T, filterOut: K[])
