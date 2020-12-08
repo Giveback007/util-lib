@@ -158,3 +158,17 @@ export function arrToBoolDict(arr: (string | number)[])
 
 /** Gets the last item from the array */
 export const arrLast = <T>(arr: T[]) => arr[arr.length - 1];
+
+/**
+ * Checks if arr has a given value. If equivalent = true the
+ * value will be checked if it has an 'equivalent', meaning it
+ * has an object or array that is an equivalent "clone like".
+ */
+export function arrHas<T>(
+    arr: T[], find: T, equivalent = false
+) {
+    const fct = equivalent ?
+        (x: T) => equal(x, find) : (x: T) => x === find;
+
+    return arr.findIndex(fct) !== -1;
+}

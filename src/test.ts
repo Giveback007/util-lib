@@ -37,12 +37,12 @@ export function hasKeys<
  * isType(null, 'undefined') //=> false
  * ```
  */
-export const isType = <
-  T extends JsType
-> (val: any, testType: T): val is JsTypeFind<T> => type(val) === testType;
+export const isType = <T extends JsType> (
+  val: any, testType: T
+): val is JsTypeFind<T> => type(val) === testType;
 
 /** any of the values in the first "example" return `true`
- * @example 
+ * @example
  * ```js
  * nullOrEmpty(null | undefined | '' | [ ] | { }) //=> true
  * nullOrEmpty([1, 2] | { key: 'value' } | true) //=> false

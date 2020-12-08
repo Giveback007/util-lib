@@ -49,7 +49,7 @@ type timeObj = { d: number; h: number; m: number; s: number; ms: number; }
 /**
  * Takes milliseconds and outputs to human readable time
  * @returns `'ddd:hh:mm:ss:ms'` | `{ d: number; h: number; m: number; s: number; ms: number; }`
- * @example 
+ * @example
  * ```js
  * msToTime(86400005) => '001:00:00:00:005'
  * msToTime(86400005, true) => { d: 1; h: 0; m: 0; s: 0; ms: 5; }

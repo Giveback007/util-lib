@@ -1,4 +1,6 @@
-import type { Omit, StrKeys, ResolvedValue, Dict, AnyObj } from './@types';
+import type {
+    Omit, StrKeys, ResolvedValue, Dict, AnyObj
+} from './@types';
 
 /** Maps over an object just as a [ ].map would on an array */
 export function objMap<
@@ -90,8 +92,9 @@ export const objResolve = (o: AnyObj, path: string): any =>
 /**
  * returns a new obj with the keys being sorted
  */
-export const objSortKeys = <T extends {}>(o: T, compareFn?: (a: keyof T, b: keyof T) => number) =>
-{
+export const objSortKeys = <T extends {}>(
+    o: T, compareFn?: (a: keyof T, b: keyof T) => number
+) => {
     const newObj = {} as T;
 
     const keys = objKeys(o).sort(compareFn);
@@ -101,8 +104,9 @@ export const objSortKeys = <T extends {}>(o: T, compareFn?: (a: keyof T, b: keyo
 }
 
 /**
- * Takes a dictionary/object made of Promises and Observables and extracts all values.
- * This function will initiate every Observable/Promise simultaneously.
+ * Takes a dictionary/object made of Promises and Observables and
+ * extracts all values. This function will initiate every
+ * Observable/Promise simultaneously.
  */
 export function objPromiseAll<T extends Dict<Promise<any>>>(obj: T) {
     const keyValues = objKeyVals(obj);

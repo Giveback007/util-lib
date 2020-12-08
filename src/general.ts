@@ -2,7 +2,7 @@ import fetchJsonp from 'fetch-jsonp';
 import { JsType, isType, objMap, hasKey, AnyObj } from '.';
 
 /**
- * @example 
+ * @example
  * ```js
  * interval((i) => console.log('The index is: ' + i), 1000, 2) =>
  * //=> 'The index is: 0' //=> 'The index is: 1'
@@ -12,8 +12,7 @@ export const interval = (
     funct: (i: number) => any,
     ms: number,
     times?: number
-) =>
-{
+) => {
     if (isType(times, 'number') && times < 1)
         throw Error('argument "times" can\'t be less than 1');
 
