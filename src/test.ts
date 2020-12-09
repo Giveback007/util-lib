@@ -1,4 +1,5 @@
-import { JsType, JsTypeFind, objVals, type } from '.';
+import type { JsType } from '.';
+import { JsTypeFind, objVals, type } from '.';
 
 /**
  * Checks if object has the key, made as a function for type transfer.

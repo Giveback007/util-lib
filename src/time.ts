@@ -1,17 +1,5 @@
 // import * as moment from 'moment-timezone';
-
-export type MsTime = {
-    /** second */
-    s: 1000;
-    /** minute */
-    m: 60000;
-    /** hour */
-    h: 3600000;
-    /** day */
-    d: 86400000;
-    /** week */
-    w: 604800000;
-}
+import type { MsTime } from '.';
 
 export const msTime: MsTime = {
     s: 1000,

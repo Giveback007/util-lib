@@ -1,5 +1,6 @@
-import fetchJsonp from 'fetch-jsonp';
-import { JsType, isType, objMap, hasKey, AnyObj } from '.';
+// import * as fetchJsonp from 'fetch-jsonp';
+import type { AnyObj, JsType } from '.';
+import { isType, objMap, hasKey } from '.';
 
 /**
  * @example
@@ -109,10 +110,10 @@ export const uiid = () =>
 export const randomColorHex = () =>
     '#' + ((1<<24)*Math.random() | 0).toString(16);
 
-export const jsonp = async <T = any>(
-    url: string,
-    options?: fetchJsonp.Options
-) => (await fetchJsonp(url, options)).json<T>();
+// export const jsonp = async <T = any>(
+//     url: string,
+//     options?: fetchJsonp.Options
+// ) => (await fetchJsonp(url, options)).json<T>();
 
 // // TODO: include async functions
 // export function strToFnt(fStr: string) {

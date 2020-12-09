@@ -1,6 +1,4 @@
-import type {
-    Omit, StrKeys, ResolvedValue, Dict, AnyObj
-} from './@types';
+import type { Omit, StrKeys, ResolvedValue, Dict, AnyObj } from '.';
 
 /** Maps over an object just as a [ ].map would on an array */
 export function objMap<

@@ -1,6 +1,6 @@
+import type { AnyObj, Dict } from '.';
 import {
-    AnyObj, Dict, isType, nonValue,
-    objRemoveKeys, objVals, equal,
+    isType, nonValue, objRemoveKeys, objVals, equal
 } from '.';
 
 /** Generates an array of null values */

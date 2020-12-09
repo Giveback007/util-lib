@@ -38,3 +38,16 @@ export type JsTypeFind<S extends JsType> =
     S extends 'string'      ? string :
     S extends 'symbol'      ? symbol :
     S extends 'undefined'   ? undefined : never;
+
+export type MsTime = {
+    /** second */
+    s: 1000;
+    /** minute */
+    m: 60000;
+    /** hour */
+    h: 3600000;
+    /** day */
+    d: 86400000;
+    /** week */
+    w: 604800000;
+}
