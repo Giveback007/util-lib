@@ -1,6 +1,6 @@
 // import * as fetchJsonp from 'fetch-jsonp';
 import type { AnyObj, JsType } from '.';
-import { isType, objMap, hasKey } from '.';
+import { isType, objMap, hasKey, clone } from '.';
 
 /**
  * @example
@@ -52,10 +52,6 @@ export function unsubAll(objOrArr: AnyObj | any[]) {
  * state instance.
  */
 export const cloneLog = (x: any) => console.log(clone(x));
-
-/** Creates a copy of using JSON stringify and parse */
-export const clone = <T>(item: T): T =>
-    JSON.parse(JSON.stringify(item));
 
 /** An improved version of native `typeof` */
 export function type(val: any): JsType

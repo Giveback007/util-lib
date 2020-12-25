@@ -1,5 +1,6 @@
 export * from './@types';
 export * from './array';
+export * from './clone';
 export * from './equality';
 export * from './general';
 export * from './iterate';

@@ -1,18 +1,18 @@
 /* tslint:disable */
 // original source from:
-// https://github.com/epoberezkin/fast-deep-equal/blob/master/src/index.jst#L60
+// https://github.com/epoberezkin/fast-deep-equal
 
 export function equal(a: any, b: any) 
 {
 	if (a === b) return true;
 
-	if (a && b && typeof a == 'object' && typeof b == 'object') {
+	if (a && b && typeof a === 'object' && typeof b === 'object') {
 		if (a.constructor !== b.constructor) return false;
 
 		var length, i, keys;
 		if (Array.isArray(a)) {
 			length = a.length;
-			if (length != b.length) return false;
+			if (length !== b.length) return false;
 			for (i = length; i-- !== 0;)
 				if (!equal(a[i], b[i])) return false;
 			return true;
