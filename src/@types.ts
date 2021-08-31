@@ -51,3 +51,17 @@ export type MsTime = {
     /** week */
     w: 604800000;
 }
+
+/**
+ * ```ts
+ * const o = {
+ *  k1: true,
+ *  k2: 'string',
+ *  k3: false
+ * }
+ *
+ * type Y = KeysOfValueType<typeof o, boolean>
+ * type Y => "k1" | "k3"
+ * ```
+ */
+ export type KeysOfValueType<O, T> = { [I in keyof O]: O[I] extends T ? I : never }[keyof O];
