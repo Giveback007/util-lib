@@ -66,3 +66,6 @@ export function nullOrEmpty(x: any): boolean
 /** val `is` (null || undefined) */
 export const nonValue = (val: any): val is (null | undefined) =>
   val === null || val === undefined;
+
+export const isValidEmail = (email: string) =>
+  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)
