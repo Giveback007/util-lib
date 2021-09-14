@@ -120,3 +120,11 @@ export const randomColorHex = () =>
 //     // tslint:disable-next-line: no-eval
 //     return eval(start + ' =>' + end);
 // }
+
+export function debounceTimeOut() {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    return (fct: Function, ms: number) => {
+        if (timeoutId) clearTimeout(timeoutId);
+        timeoutId = setTimeout(fct, ms) as any;
+    }
+}
