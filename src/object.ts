@@ -103,8 +103,8 @@ export const objSortKeys = <T extends {}>(
 
 /**
  * Takes a dictionary/object made of Promises and Observables and
- * extracts all values. This function will initiate every
- * Observable/Promise simultaneously.
+ * extracts all values. This function will return resolved values from all
+ * Observable/Promise on the obj when all promises on object resolve.
  */
 export function objPromiseAll<T extends Dict<Promise<any>>>(obj: T) {
     const keyValues = objKeyVals(obj);

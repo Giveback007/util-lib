@@ -1,5 +1,4 @@
-// import * as moment from 'moment-timezone';
-import type { MsTime } from '.';
+import { isType, MsTime } from '.';
 
 export const msTime: MsTime = {
     s: 1000,
@@ -8,6 +7,8 @@ export const msTime: MsTime = {
     d: 86400000,
     w: 604800000,
 }
+
+export const weekTuple = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
 
 /**
  * Converts Date to time of day.
@@ -46,8 +47,7 @@ type timeObj = { d: number; h: number; m: number; s: number; ms: number; }
 export function msToTime<T extends boolean>(msT: number, toObj?: boolean): string | timeObj;
 export function msToTime<T extends boolean>(msT: number, toObj: true): timeObj;
 export function msToTime<T extends boolean>(msT: number, toObj?: false): string;
-export function msToTime(msT: number, toObj = false)
-{
+export function msToTime(msT: number, toObj = false) {
     // N - number;
     const msN = (msT % 1000);
     let sN = Math.floor(msT / 1000);
@@ -100,58 +100,89 @@ export const weeks = (w: number) => w * msTime.w;
 /** Analog of weeks */
 export const wks = weeks;
 
-/**
- * Get unixMs for a given date/time, input time is in UTC
- * @example unixMs('2015-01-02') => 1420128000000
+/** Gives the 'start' and 'end' of a day.
+ *
+ * Start of day is the first ms of the day
+ *
+ * End of day is the last ms of the day
  */
-export const unixMs = (time: string) =>
-{
-    const a = time.split('-').map((n) => parseFloat(n));
-    return new Date(a[0], a[1], a[2]).getTime();
+ export function getDayStartEnd(t: number | Date, type: 'unix' | 'local' = 'local') {
+    if (isType(t, 'number')) t = new Date(t);
+
+    const y = t.getFullYear();
+    const m = t.getMonth();
+    const d = t.getDate();
+
+    let start = new Date(y, m, d);
+    let end = new Date(y, m, d, 23, 59, 59, 999);
+
+    if (type === 'unix') {
+        const tzOffset = min(start.getTimezoneOffset());
+
+        start = new Date(start.getTime() + tzOffset);
+        end = new Date(end.getTime() + tzOffset);
+    }
+
+    return { start, end };
 }
 
-// /** Gives the 'start' and 'end' milliseconds of a unix day */
-// export const dayStartEnd = (unixMsTime: number) =>
-// {
-//     const t = moment(unixMsTime).utc();
+export function weekStartEnd(t: number | Date, weekStart: 'sun' | 'mon' = 'sun', type: 'unix' | 'local' = 'local') {
+    if (isType(t, 'number')) t = new Date(t);
 
-//     t.set({ h: 0, m: 0, s: 0, ms: 0 });
-//     const start = t.valueOf();
+    const wd = t.getDay();
 
-//     t.set({ h: 23, m: 59, s: 59, ms: 999 });
-//     const end = t.valueOf();
+    const startOffset = wd * -1 + (weekStart === 'mon' ? 1 : 0);
+    const endOffset = 6 + startOffset;
 
-// 	return { start, end };
-// }
+    const s = new Date(t.getTime() + days(startOffset));
+    const e = new Date(t.getTime() + days(endOffset));
 
-// /** Gives the 'start' and 'end' milliseconds of a unix month */
-// export const monthStartEnd = (unixMsTime: number): {
-//     start: number;
-//     end: number;
-// } =>
-// {
-//     const year = moment(unixMsTime).utc().year();
-//     const month = ('0' + (moment(unixMsTime).utc().month() + 1)).slice(-2);
+    let start = new Date(s.getFullYear(), s.getMonth(), s.getDate());
+    let end = new Date(e.getFullYear(), e.getMonth(), e.getDate(), 23, 59, 59, 999);
 
-//     const s = moment(`${year}-${month}-01`).set({ h: 0, m: 0, s: 0, ms: 0 });
-//     const start = s.valueOf() + min(s.utcOffset());
+    if (type === 'unix') {
+        const tzOffset = min(start.getTimezoneOffset());
 
-//     const e = moment(`${year}-${month}-31`).set({ h: 23, m: 59, s: 59, ms: 999 });
-//     const end = e.valueOf() + min(e.utcOffset());
+        start = new Date(start.getTime() + tzOffset);
+        end = new Date(end.getTime() + tzOffset);
+    }
 
-//     return { start, end };
-// }
+    return { start, end };
+}
 
-// /** Gives the 'start' and 'end' milliseconds of a unix year */
-// export const yearStartEnd = (unixMsTime: number) =>
-// {
-//     const year = moment(unixMsTime).utc().year();
+export function monthStartEnd(t: number | Date, type: 'unix' | 'local' = 'local') {
+    if (isType(t, 'number')) t = new Date(t);
 
-//     const s = moment(`${year}-01-01`).set({ h: 0, m: 0, s: 0, ms: 0 });
-//     const start = s.valueOf() + min(s.utcOffset());
+    const y = t.getFullYear();
+    const m = t.getMonth();
 
-//     const e = moment(`${year}-12-31`).set({ h: 23, m: 59, s: 59, ms: 999 });
-//     const end = e.valueOf() + min(e.utcOffset());
+    let start = new Date(y, m, 1);
+    let end = new Date(y, m, 0, 23, 59, 59, 999);
 
-//     return { start, end };
-// }
+    if (type === 'unix') {
+        const tzOffset = min(start.getTimezoneOffset());
+
+        start = new Date(start.getTime() + tzOffset);
+        end = new Date(end.getTime() + tzOffset);
+    }
+
+    return { start, end };
+}
+
+export function yearStartEnd(t: number | Date, type: 'unix' | 'local' = 'local') {
+    if (isType(t, 'number')) t = new Date(t);
+
+    const y = t.getFullYear();
+
+    let start = new Date(y, 0, 1);
+    let end = new Date(y, 12, 0, 23, 59, 59, 999);
+
+    if (type === 'unix') {
+        const tzOffset = min(start.getTimezoneOffset());
+
+        start = new Date(start.getTime() + tzOffset);
+        end = new Date(end.getTime() + tzOffset);
+    }
+
+    return { start, end };
+}

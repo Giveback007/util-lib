@@ -32,15 +32,16 @@ export const interval = (
 export const wait = (ms: number): Promise<void> =>
     new Promise((res) => setTimeout(() => res(), ms));
 
-const usubAllFunct = (x: any) =>
+const usubAllFunct = (x: any, unsubName = 'unsubscribe') =>
     isType(x, 'object')
     &&
-    hasKey(x, 'unsubscribe') ? x.unsubscribe() : null;
-export function unsubAll(objOrArr: AnyObj | any[]) {
+    hasKey(x, unsubName) ? x[unsubName]() : null;
+
+export function unsubAll(objOrArr: AnyObj | any[], unsubName = 'unsubscribe') {
     if (isType(objOrArr, 'array'))
-        objOrArr.forEach(x => usubAllFunct(x));
+        objOrArr.forEach(x => usubAllFunct(x, unsubName));
     else if (isType(objOrArr, 'object'))
-        objMap(objOrArr, ({ val }) => usubAllFunct(val));
+        objMap(objOrArr, ({ val }) => usubAllFunct(val, unsubName));
     else
         throw Error('argument "objOrArr" must be of type "object" or "array"');
 }
@@ -127,4 +128,10 @@ export function debounceTimeOut() {
         if (timeoutId) clearTimeout(timeoutId);
         timeoutId = setTimeout(fct, ms) as any;
     }
+}
+
+export function promiseOut<T = any>() {
+    let resolve: any;
+    const promise = new Promise((res) => resolve = res);
+    return { resolve: resolve as (value: T) => void, promise };
 }
