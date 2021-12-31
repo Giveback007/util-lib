@@ -1,5 +1,8 @@
-import type { JsType } from '.';
+import { equal, JsType } from '.';
 import { JsTypeFind, objVals, type } from '.';
+
+/** Check if `x` is equal to any of the values in the array. */
+export const equalAny = (x: any, equals: any[]) => !!equals.find((y) => equal(x, y));
 
 /**
  * Checks if object has the key, made as a function for type transfer.
