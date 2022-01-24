@@ -124,9 +124,12 @@ export const randomColorHex = () =>
 
 export function debounceTimeOut() {
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
-    return (fct: Function, ms: number) => {
+    
+    return (fct: Function | 'cancel', ms?: number) => {
         if (timeoutId) clearTimeout(timeoutId);
-        timeoutId = setTimeout(fct, ms) as any;
+
+        if (fct !== 'cancel')
+            timeoutId = setTimeout(fct, ms || 0) as any;
     }
 }
 
