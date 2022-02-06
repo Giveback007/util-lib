@@ -78,7 +78,7 @@ export function assertType<T extends JsType>(
     throw Error(`value needs to be of type ${types.join(' || ')}`)
 }
 
-export const uiid = () =>
+export const uuid = () =>
 {
     let d = new Date().getTime();
     let d2 = (
