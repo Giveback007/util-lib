@@ -1,11 +1,11 @@
 {
   "name": "@giveback007/util-lib",
-  "version": "0.24.1",
+  "version": "0.24.2",
   "description": "Small util function library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "publish-script": "del dist /s /f /q && npm run lint && npm run build && npm publish",
+    "pub": "del dist /s /f /q && npm run lint && npm run build && npm publish",
     "test": "jest --watch",
     "build": "tsc",
     "build:watch": "tsc --watch",

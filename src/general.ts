@@ -9,7 +9,7 @@ import { isType, objMap, hasKey, clone } from '.';
  * // (log =>) "idx: 0"
  * // (log =>) "idx: 1"
  * // only ran twice because maxTimes was set to: `2` (third parameter)
- * 
+ *
  * interval((i, stop) => i === 10 && stop());
  * // when i is 10 will stop the interval
  * ```
