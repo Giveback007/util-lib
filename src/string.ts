@@ -9,8 +9,8 @@ export const minAppend = (
     item: string | number, length: number, append = '0'
 ) => {
     item = item + '';
-    if (length < 1) throw Error('length can not be less than 1');
-    if (item.length > length) throw Error('item can not exceed length');
+    if (length < 1) console.error(length, 'length can not be less than 1');
+    if (item.length > length) console.error(item, 'item can not exceed length');
 
     return (append.repeat(length - 1) + item).slice(-(length))
 }
