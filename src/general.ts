@@ -5,27 +5,39 @@ import { isType, objMap, hasKey, clone } from '.';
 /**
  * @example
  * ```js
- * interval((i) => console.log('The index is: ' + i), 1000, 2) =>
- * //=> 'The index is: 0' //=> 'The index is: 1'
+ * interval((i) => console.log('idx: ' + i), 1000, 2))
+ * // (log =>) "idx: 0"
+ * // (log =>) "idx: 1"
+ * // only ran twice because maxTimes was set to: `2` (third parameter)
+ * 
+ * interval((i, stop) => i === 10 && stop());
+ * // when i is 10 will stop the interval
  * ```
  */
 export const interval = (
-    funct: (i: number) => any,
+    funct: (i: number, stop: () => void) => any,
     ms: number,
-    times?: number
+
+    /** */
+    maxTimes?: number
 ) => {
-    if (isType(times, 'number') && times < 1)
+    if (isType(maxTimes, 'number') && maxTimes < 1)
         throw Error('argument "times" can\'t be less than 1');
 
     let i = 0;
-    const intv = setInterval(() => {
-        funct(i);
+    /** stops the interval */
+    const stop = () => clearInterval(itv);
+    const itv = setInterval(() => {
+        funct(i, stop);
         i++;
 
-        if (times && i >= times) clearInterval(intv);
+        if (maxTimes && i >= maxTimes) stop();
     }, ms);
 
-    return { stop: () => clearInterval(intv) };
+    return {
+        /** Stop the interval */
+        stop
+    };
 }
 
 /** A promise that waits `ms` amount of milliseconds to execute */
