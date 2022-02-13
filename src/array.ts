@@ -4,8 +4,10 @@ import {
 } from '.';
 
 /** Generates an array of null values */
-export const arrGen = <T = any>(length: number): T[] =>
-    Array(length).fill(null);
+export const arrGen = <T = any>(
+    length: number,
+    fill: number | BigInt | string | boolean | undefined | null = undefined
+): T[] => length < 1 ? [] : Array(length).fill(fill);
 
 /**
  * Returns a new array without mutating the provided one.
@@ -18,8 +20,7 @@ export const arrGen = <T = any>(length: number): T[] =>
  */
 export function arrRemoveById<
     T extends AnyObj
->(arr: T[], idArr: string[], idKey: keyof T = 'id')
-{
+>(arr: T[], idArr: string[], idKey: keyof T = 'id') {
     const objDict = arrToDict(arr, idKey);
     const keep: Dict<T> = objRemoveKeys(objDict, idArr);
 
