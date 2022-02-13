@@ -52,7 +52,7 @@ export function arrDivide<T>(
     arr: T[],
     maxRowLength: number
 ): T[][] {
-    const rows = Math.ceil(arr.length / maxRowLength);
+    const rows = Math.ceil(arr.length / maxRowLength) || 0;
     const newArr = arrGen(rows).map(() => ([] as T[]));
 
     arr.forEach((x, i) =>
