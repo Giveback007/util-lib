@@ -34,8 +34,13 @@ export const msToHrs = (ms: number) => ms / msTime.h;
 export const msToDys = (ms: number) => ms / msTime.d;
 export const msToWks = (ms: number) => ms / msTime.w;
 
-type timeObj = { d: number; h: number; m: number; s: number; ms: number; }
+type TimeObjS = { d: string; h: string; m: string; s: string; ms: string; };
+type TimeObjN = { d: number; h: number; m: number; s: number; ms: number; };
 /**
+ * DEPRECATED use `msTimeObj()`
+ *
+ * ----------------------------
+ *
  * Takes milliseconds and outputs to human readable time
  * @returns `'ddd:hh:mm:ss:ms'` | `{ d: number; h: number; m: number; s: number; ms: number; }`
  * @example
@@ -44,8 +49,8 @@ type timeObj = { d: number; h: number; m: number; s: number; ms: number; }
  * msToTime(86400005, true) => { d: 1; h: 0; m: 0; s: 0; ms: 5; }
  * ```
  */
-export function msToTime<T extends boolean>(msT: number, toObj?: boolean): string | timeObj;
-export function msToTime<T extends boolean>(msT: number, toObj: true): timeObj;
+export function msToTime<T extends boolean>(msT: number, toObj?: boolean): string | TimeObjN;
+export function msToTime<T extends boolean>(msT: number, toObj: true): TimeObjN;
 export function msToTime<T extends boolean>(msT: number, toObj?: false): string;
 export function msToTime(msT: number, toObj = false) {
     // N - number;
@@ -68,6 +73,32 @@ export function msToTime(msT: number, toObj = false) {
 
     if (toObj) return { d: dN, h: hN, m: mN, s: sN, ms: msN };
     return `${dN ? d + ':' : ''}${h}:${m}:${s}:${ms}`;
+}
+
+export function msTimeObj<T extends boolean>(msT: number, toNumbers?: boolean): TimeObjS
+export function msTimeObj<T extends boolean>(msT: number, toNumbers: true): TimeObjN;
+export function msTimeObj(msT: number, toNumbers = false) {
+    // N - number;
+    const ms = (msT % 1000);
+    let s = Math.floor(msT / 1000);
+    let m = Math.floor(s / 60);
+    s = s % 60;
+
+    let h = Math.floor(m / 60);
+    m = m % 60;
+
+    const d = Math.floor(h / 24);
+    h = h % 24;
+
+    if (toNumbers) return { d, h, m, s, ms };
+
+    return {
+        d: ('00' + d).slice(-3),
+        h: (('0' + h).slice(-2)),
+        m: (('0' + m).slice(-2)),
+        s: (('0' + s)).slice(-2),
+        ms: (('00' + ms).slice(-3)),
+    }
 }
 
 /** Gives seconds in milliseconds | `sec(s) => s * 1000` */
