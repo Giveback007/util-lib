@@ -2,7 +2,7 @@
 // original source from:
 // https://github.com/epoberezkin/fast-deep-equal
 
-export function equal(a: any, b: any) 
+export function equal(a: any, b: any)
 {
 	if (a === b) return true;
 
@@ -55,7 +55,7 @@ export function equal(a: any, b: any)
 		if (length !== Object.keys(b).length) return false;
 
 		for (i = length; i-- !== 0;)
-			if (!Object.prototype.hasOwnProperty.call(b, keys[i]))
+			if (!Object.prototype.hasOwnProperty.call(b, keys[i]!))
 				return false;
 
 		for (i = length; i-- !== 0;) {
@@ -69,7 +69,7 @@ export function equal(a: any, b: any)
 				continue;
 			}
 
-			if (!equal(a[key], b[key])) return false;
+			if (!equal(a[key as any], b[key as any])) return false;
 		}
 
 		return true;

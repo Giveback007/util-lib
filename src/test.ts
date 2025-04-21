@@ -14,18 +14,18 @@ export const equalAny = (x: any, equals: any[]) => !!equals.find((y) => equal(x,
 export const hasKey = <
     K extends (string | number)
 >(obj: any, key: K): obj is { [P in K]: any } =>
-  isType(obj, 'object') && obj.hasOwnProperty(key);
+    isType(obj, 'object') && obj.hasOwnProperty(key);
 
 /** Checks if object has keys from an array of keys, made as a function for type transfer */
 export function hasKeys<
-  K extends (string | number)
+    K extends (string | number)
 >(obj: any, keys: K[]): obj is { [P in K]: any } {
-  if (!isType(obj, 'object')) return false;
+    if (!isType(obj, 'object')) return false;
 
-  for (const key of keys)
-    if (!obj.hasOwnProperty(key)) return false;
+    for (const key of keys)
+        if (!obj.hasOwnProperty(key)) return false;
 
-  return true;
+    return true;
 }
 
 /**
@@ -41,8 +41,8 @@ export function hasKeys<
  * isType(null, 'undefined') //=> false
  * ```
  */
-export const isType = <T extends JsType> (
-  val: any, testType: T
+export const isType = <T extends JsType>(
+    val: any, testType: T
 ): val is JsTypeFind<T> => type(val) === testType;
 
 /** any of the values in the first "example" return `true`
@@ -52,23 +52,20 @@ export const isType = <T extends JsType> (
  * nullOrEmpty([1, 2] | { key: 'value' } | true) //=> false
  * ```
  */
-export function nullOrEmpty(x: any): boolean
-{
-  // null || undefined
-  if (nonValue(x)) return true;
+export function nullOrEmpty(x: any): boolean {
+    // null || undefined
+    if (nonVal(x)) return true;
 
-  // (string || array).length === 0
-  if (isType(x, 'string') || isType(x, 'array')) return !x.length;
+    // (string || array).length === 0
+    if (isType(x, 'string') || isType(x, 'array')) return !x.length;
 
-  // object // { key: 'val' } => false, { } => true
-  if (isType(x, 'object')) return !objVals(x).length;
+    // object // { key: 'val' } => false, { } => true
+    if (isType(x, 'object')) return !objVals(x).length;
 
-  return false;
+    return false;
 }
 
 /** val `is` (null || undefined) */
-export const nonValue = (val: any): val is (null | undefined) =>
-  val === null || val === undefined;
-
-export const isValidEmail = (email: string) =>
-  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)
+export const nonVal = <T>(
+    x: T | null | undefined
+): x is (undefined | null) => x === null || x === undefined;

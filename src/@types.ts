@@ -1,7 +1,5 @@
 export type AnyObj = { [key: string]: any };
 
-export type Dict<T> = { [id: string]: T };
-
 /** string type keyof T */
 export type StrKeys<T> = Extract<keyof T, string>;
 
@@ -65,3 +63,40 @@ export type MsTime = {
  * ```
  */
  export type KeysOfValueType<O, T> = { [I in keyof O]: O[I] extends T ? I : never }[keyof O];
+
+ export type AwaitReturn<T extends AnyFnc<any | Promise<any>>> = Awaited<ReturnType<T>>;
+
+export type num = number;
+export type str = string;
+export type bol = boolean;
+
+export type AnyFnc<T = any> = (...args: any[]) => T;
+
+export type DayOfWeek = 'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat';
+
+export type TimeObj = {
+    y:      num;
+    m:      num;
+    d:      num;
+    h:      num;
+    min:    num;
+    sec:    num;
+    ms:     num;
+    wDay:   DayOfWeek;
+};
+
+export type PartialTimeObj = {
+    y:      num;
+    m?:     num;
+    d?:     num;
+    h?:     num;
+    min?:   num;
+    sec?:   num;
+    ms?:    num;
+};
+
+export type TimeArr = [y: num, m?: num, d?: num, h?: num, min?: num, sec?: num, ms?: num];
+
+export type AnyDate = string | number | Date | TimeObj | PartialTimeObj | TimeArr;
+
+export type Dict<T> = { [id: string]: T };

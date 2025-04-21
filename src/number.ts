@@ -1,4 +1,3 @@
-import type { Dict } from '.';
 import { arrToBoolDict, isType } from '.';
 
 /**
@@ -8,8 +7,11 @@ import { arrToBoolDict, isType } from '.';
  * @param min - whole number & `< max`
  * @param max - whole number & `> min`
  */
-export const rand = (min: number, max: number) =>
+export const randInt = (min: number, max: number) =>
     Math.floor(Math.random() * ((max + 1) - min)) + min;
+
+export const rand = (min: number, max: number) =>
+    Math.random() * (max - min) + min;
 
 /** Takes an array of numbers and finds and average */
 export const average = (nArr: number[]) =>
@@ -40,7 +42,7 @@ export const numberWithCommas = (n: number | string) =>
  * Takes a number || number[] and min & max, will generate a
  * new random number.
  */
-export function newNumFromRange(
+export function newNum(
     prevNum: number | number[], min: number, max: number
 ) {
     let num;
@@ -49,7 +51,7 @@ export function newNumFromRange(
         arrToBoolDict(prevNum) : { [prevNum]: true };
 
     do {
-        num = rand(min, max);
+        num = randInt(min, max);
         loop++;
 
         if (loop > 1_000_000) {

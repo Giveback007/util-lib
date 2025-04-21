@@ -14,7 +14,8 @@
         "ban-types": false,
         "interface-name": false,
         "variable-name": [true, "allow-leading-underscore"],
-        "no-bitwise": false
+        "no-bitwise": false,
+        "no-conditional-assignment": "off"
     },
     "rulesDirectory": []
 }

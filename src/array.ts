@@ -1,6 +1,6 @@
-import type { AnyObj, Dict } from '.';
+import type { AnyObj } from '.';
 import {
-    isType, nonValue, objRemoveKeys, objVals, equal
+    isType, nonVal, objRemoveKeys, objVals, equal
 } from '.';
 
 /** Generates an array of null values */
@@ -56,7 +56,7 @@ export function arrDivide<T>(
     const newArr = arrGen(rows).map(() => ([] as T[]));
 
     arr.forEach((x, i) =>
-        newArr[Math.floor(i / maxRowLength)].push(x));
+        newArr[Math.floor(i / maxRowLength)]!.push(x));
 
     return newArr;
 }
@@ -109,7 +109,7 @@ export function arrReplace<T>(arr: T[])
 
             return {
                 with: (newItem: T) => {
-                    if (nonValue(idx)) return arr;
+                    if (nonVal(idx)) return arr;
 
                     newArr[idx] = newItem;
                     return newArr;

@@ -15,20 +15,20 @@ import { isType, objMap, hasKey, clone } from '.';
  * ```
  */
 export const interval = (
-    funct: (i: number, stop: () => void) => any,
-    ms: number,
+    func: (i: number, stop: () => void) => any,
+    ms: number = 0,
 
-    /** */
-    maxTimes?: number
+    /** n times to run the interval */
+    maxTimes: number = Infinity
 ) => {
-    if (isType(maxTimes, 'number') && maxTimes < 1)
-        throw Error('argument "times" can\'t be less than 1');
+    maxTimes = Math.floor(maxTimes);
+    if (maxTimes < 1) return { stop: () => void(0) };
 
     let i = 0;
-    /** stops the interval */
+
     const stop = () => clearInterval(itv);
     const itv = setInterval(() => {
-        funct(i, stop);
+        func(i, stop);
         i++;
 
         if (maxTimes && i >= maxTimes) stop();
@@ -87,7 +87,7 @@ export function assertType<T extends JsType>(
     if (!isType(types, 'array')) types = [types];
     for (const t of types) if (isType(val, t)) return;
 
-    throw Error(`value needs to be of type ${types.join(' || ')}`)
+    throw Error(`value needs to be of type: ${types.join(' || ')}`)
 }
 
 export const uuid = () =>
@@ -119,20 +119,13 @@ export const uuid = () =>
 export const randomColorHex = () =>
     '#' + ((1<<24)*Math.random() | 0).toString(16);
 
-// export const jsonp = async <T = any>(
-//     url: string,
-//     options?: fetchJsonp.Options
-// ) => (await fetchJsonp(url, options)).json<T>();
-
-// // TODO: include async functions
-// export function strToFnt(fStr: string) {
-//     const x = fStr.slice(fStr.indexOf('('));
-//     const start = x.slice(0, x.indexOf(')') + 1);
-//     const end = x.slice(x.indexOf(')') + 1);
-
-//     // tslint:disable-next-line: no-eval
-//     return eval(start + ' =>' + end);
-// }
+export const debounce = (fn: AnyFnc, ms: num) => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+    return function (this: any, ...args: any[]) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => fn.apply(this, args), ms);
+    };
+};
 
 export function debounceTimeOut() {
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -145,8 +138,55 @@ export function debounceTimeOut() {
     }
 }
 
+export const debounceById = (() => {
+    const debounceDict: Dict<num> = {};
+    return (fn: AnyFnc, ms: num, id: str | num) => {
+        const dId = debounceDict[id];
+        if (dId) clearTimeout(dId);
+
+        debounceDict[id] = setTimeout(fn, ms) as any;
+    }
+})();
+
 export function promiseOut<T = any>() {
     let resolve: any;
-    const promise = new Promise((res) => resolve = res);
-    return { resolve: resolve as (value: T) => void, promise };
+    let error: any;
+
+    const promise: Promise<T> = new Promise((res, err) => {
+        resolve = res;
+        error = err;
+    });
+
+    return {
+        error: error as (reason?: any) => void,
+        resolve: resolve as (value: T) => void,
+        promise,
+    };
+}
+
+export async function concurrentTasks<T, Res = any>(
+    arr: T[],
+    fn: (x: T, idx: number) => Promise<Res> | Res,
+    nOfConcurrentTasks = 8
+): Promise<Res[]> {
+    let idx = -1;
+    const result: Res[] = [];
+
+    await Promise.all(Array(nOfConcurrentTasks).fill(0).map(async () => {
+        let data: T | undefined;
+        while (data = arr[++idx]) {
+            const i = idx;
+            result[i] = await fn(data, idx)
+        }
+    }));
+
+    return result;
+}
+
+export function hash(str: string) {
+    let hash = 0n;
+    for (let i = 0; i < str.length; i++)
+        hash = (hash * 31n + BigInt(str.charCodeAt(i))) & 0xFFFFFFFFFFFFFFFFn;
+
+    return hash.toString(36);
 }

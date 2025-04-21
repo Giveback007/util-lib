@@ -1,4 +1,4 @@
-import type { Omit, StrKeys, ResolvedValue, Dict, AnyObj } from '.';
+import type { Omit, StrKeys, ResolvedValue, AnyObj } from '.';
 
 /** Maps over an object just as a [ ].map would on an array */
 export function objMap<
@@ -56,7 +56,7 @@ export function objKeys<T extends {}>(o: T): StrKeys<T>[]
 }
 
 export const objVals = <T = any>(o: { [key: string]: T }): T[] =>
-    Object.values ? Object.values(o) : objKeys(o).map((key) => o[key]);
+    Object.values(o)
 
 export const objKeyVals = <T extends {}>(o: T) =>
     objKeys(o).map((key) => ({ key, val: o[key] }));
@@ -88,20 +88,6 @@ export const objResolve = (o: AnyObj, path: string): any =>
     path.split('.').reduce((prev, key) => prev[key], o);
 
 /**
- * returns a new obj with the keys being sorted
- */
-export const objSortKeys = <T extends {}>(
-    o: T, compareFn?: (a: keyof T, b: keyof T) => number
-) => {
-    const newObj = {} as T;
-
-    const keys = objKeys(o).sort(compareFn);
-    keys.map((k) => newObj[k] = o[k]);
-
-    return newObj;
-}
-
-/**
  * Takes a dictionary/object made of Promises and Observables and
  * extracts all values. This function will return resolved values from all
  * Observable/Promise on the obj when all promises on object resolve.
@@ -113,7 +99,7 @@ export function objPromiseAll<T extends Dict<Promise<any>>>(obj: T) {
 
     let total = 0;
     return new Promise<typeof values>((resolve) =>
-        keyValues.forEach(({ key, val: x }) => x.then((data) => {
+        keyValues.forEach(({ key, val: x }) => x!.then((data) => {
             values[key] = data;
             total++;
 
