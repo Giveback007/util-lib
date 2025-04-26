@@ -1,4 +1,4 @@
-import { arrToBoolDict, isType } from '.';
+import { arrToBoolDict, Dict, isType } from '.';
 
 /**
  * Returns a random whole number between `min` and `max`,

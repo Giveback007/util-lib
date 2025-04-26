@@ -1,4 +1,4 @@
-import type { AnyObj } from '.';
+import type { AnyObj, Dict } from '.';
 import {
     isType, nonVal, objRemoveKeys, objVals, equal
 } from '.';

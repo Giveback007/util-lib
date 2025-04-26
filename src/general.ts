@@ -1,5 +1,4 @@
-// import * as fetchJsonp from 'fetch-jsonp';
-import type { AnyObj, JsType } from '.';
+import type { AnyFnc, AnyObj, Dict, JsType, num, str } from '.';
 import { isType, objMap, hasKey, clone } from '.';
 
 /**
