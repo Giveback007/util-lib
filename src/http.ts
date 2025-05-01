@@ -1,14 +1,14 @@
 import { Dict } from "./@types";
+import { nonVal } from "./test";
 
 export function joinParamsToUrl(
     url: string,
     searchParams: Dict<string | number | undefined | null>,
 ) {
     const u = new URL(url);
+
     Object.entries(searchParams).forEach(([key, value]) =>
-        value !== undefined
-        &&
-        value !== null
+        !nonVal(value)
         &&
         u.searchParams.append(key, value as string)
     );

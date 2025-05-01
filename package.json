@@ -1,6 +1,6 @@
 {
     "name": "@giveback007/util-lib",
-    "version": "1.0.2",
+    "version": "2.0.1",
     "description": "Utility library",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -25,6 +25,7 @@
     },
     "homepage": "https://github.com/Giveback007/util-lib#readme",
     "dependencies": {
+        "@js-temporal/polyfill": "^0.5.1",
         "tslib": "^2.8.1"
     },
     "devDependencies": {

@@ -1,4 +1,5 @@
-import { AnyDate, isType, MsTime, num, PartialTimeObj, str, TimeArr, TimeObj } from '.';
+import { Temporal } from '@js-temporal/polyfill';
+import { AnyDate, isType, MsTime, num, str, TimeArr, TimeObj } from '.';
 
 export const msTime: MsTime = {
     s: 1000,
@@ -27,93 +28,6 @@ export function dateTimeToString(dt = new Date())
     const ms = ('00' + dt.getMilliseconds()).slice(-3);
 
     return `${h}:${m}:${s}:${ms}`;
-}
-
-/** Gives the 'start' and 'end' of a day.
- *
- * Start of day is the first ms of the day
- *
- * End of day is the last ms of the day
- */
- export function getDayStartEnd(t: number | Date, type: 'unix' | 'local' = 'local') {
-    if (isType(t, 'number')) t = new Date(t);
-
-    const y = t.getFullYear();
-    const m = t.getMonth();
-    const d = t.getDate();
-
-    let start = new Date(y, m, d);
-    let end = new Date(y, m, d, 23, 59, 59, 999);
-
-    if (type === 'unix') {
-        const tzOffset = time.min(start.getTimezoneOffset());
-
-        start = new Date(start.getTime() + tzOffset);
-        end = new Date(end.getTime() + tzOffset);
-    }
-
-    return { start, end };
-}
-
-export function weekStartEnd(t: number | Date, weekStart: 'sun' | 'mon' = 'sun', type: 'unix' | 'local' = 'local') {
-    if (isType(t, 'number')) t = new Date(t);
-
-    const wd = t.getDay();
-
-    const startOffset = wd * -1 + (weekStart === 'mon' ? 1 : 0);
-    const endOffset = 6 + startOffset;
-
-    const s = new Date(t.getTime() + time.dys(startOffset));
-    const e = new Date(t.getTime() + time.dys(endOffset));
-
-    let start = new Date(s.getFullYear(), s.getMonth(), s.getDate());
-    let end = new Date(e.getFullYear(), e.getMonth(), e.getDate(), 23, 59, 59, 999);
-
-    if (type === 'unix') {
-        const tzOffset = time.min(start.getTimezoneOffset());
-
-        start = new Date(start.getTime() + tzOffset);
-        end = new Date(end.getTime() + tzOffset);
-    }
-
-    return { start, end };
-}
-
-export function monthStartEnd(t: number | Date, type: 'unix' | 'local' = 'local') {
-    if (isType(t, 'number')) t = new Date(t);
-
-    const y = t.getFullYear();
-    const m = t.getMonth();
-
-    let start = new Date(y, m, 1);
-    let end = new Date(y, m, 0, 23, 59, 59, 999);
-
-    if (type === 'unix') {
-        const tzOffset = time.min(start.getTimezoneOffset());
-
-        start = new Date(start.getTime() + tzOffset);
-        end = new Date(end.getTime() + tzOffset);
-    }
-
-    return { start, end };
-}
-
-export function yearStartEnd(t: number | Date, type: 'unix' | 'local' = 'local') {
-    if (isType(t, 'number')) t = new Date(t);
-
-    const y = t.getFullYear();
-
-    let start = new Date(y, 0, 1);
-    let end = new Date(y, 12, 0, 23, 59, 59, 999);
-
-    if (type === 'unix') {
-        const tzOffset = time.min(start.getTimezoneOffset());
-
-        start = new Date(start.getTime() + tzOffset);
-        end = new Date(end.getTime() + tzOffset);
-    }
-
-    return { start, end };
 }
 
 export const time = {
@@ -186,46 +100,47 @@ export const humanizedTime = (date: AnyDate) => {
 // Intl.supportedValuesOf('timeZone');
 /** A Date substitute, to make working with time easier and more versatile */
 export function getTime(
-    date: TimeObj | PartialTimeObj | TimeArr,
-    ianaTimeZone?: str
+    t: TimeArr | num,
+    timeZone?: str
 ) {
-    const dt = parseDate(date);
-    if (!dt) throw new Error('Invalid Date');
+    timeZone = timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+    let zonedTemporal: Temporal.ZonedDateTime;
+    let date: Date;
+    let isoStr: str;
 
-    ianaTimeZone = ianaTimeZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const tzOffsetMin = timeZoneOffsetMin(ianaTimeZone, dt);
+    if (typeof t === 'number') {
+        date = new Date(t);
+        isoStr = date.toISOString();
+        zonedTemporal = Temporal.ZonedDateTime.from(isoStr + `[${timeZone}]`);
+    } else {
+        zonedTemporal = Temporal.ZonedDateTime.from({
+            year: t[0],
+            month: t[1] || 1,
+            day: t[2] || 1,
+            hour: t[3] || 0,
+            minute: t[4] || 0,
+            second: t[5] || 0,
+            millisecond: t[6] || 0,
+            timeZone
+        });
 
-    const localISO = toLocalISOString(dt, tzOffsetMin);
-    const finalDateObj = new Date(localISO);
+        date = new Date(zonedTemporal.epochMilliseconds);
+        isoStr = date.toISOString();
+    }
 
     return {
-        tzOffsetMin, // this flips from the JS output, to align with the ISO output (- when js would be +)
-        localISO,
-        isoStr: finalDateObj.toISOString(),
-        Date: finalDateObj,
-        epochMs: finalDateObj.getTime(),
-        ianaTZ: ianaTimeZone,
-        timeObj: timeObj(dt),
+        zonedTemporal,
+        date,
+        tzOffsetMin: zonedTemporal.offsetNanoseconds / 60_000_000_000,
+        localISO: zonedTemporal.toJSON(),
+        timeObj: timeObj(zonedTemporal),
+        isoStr,
+        timeZone: timeZone,
+        epochMs: zonedTemporal.epochMilliseconds,
     }
 }
 
-export function timeZoneOffsetMin(
-    ianaTimeZone: string,
-    date = new Date(),
-) {
-    const local = new Date(date);
-    local.setMilliseconds(0);
-    local.setSeconds(0);
-    const tzTime = local.toLocaleString('US-en', { timeZone: ianaTimeZone });
-    const tzDt = new Date(tzTime);
-
-    const offsetMs = -local.getTimezoneOffset() * 60_000;
-    const utcTime = tzDt.getTime() + offsetMs;
-
-    return (utcTime - local.getTime()) / 60_000
-}
-
-export const timeObj = (dt: Date): TimeObj => ({
+export const timeObj = (dt: Date | Temporal.ZonedDateTime): TimeObj => dt instanceof Date ? ({
     y: dt.getFullYear(),
     m: dt.getMonth() + 1,
     d: dt.getDate(),
@@ -234,6 +149,15 @@ export const timeObj = (dt: Date): TimeObj => ({
     sec: dt.getSeconds(),
     ms: dt.getMilliseconds(),
     wDay: weekTuple[dt.getDay()]!
+}) : ({
+    y: dt.year,
+    m: dt.month,
+    d: dt.day,
+    h: dt.hour,
+    min: dt.minute,
+    sec: dt.second,
+    ms: dt.millisecond,
+    wDay: weekTuple[dt.dayOfWeek]!
 });
 
 export function parseDate(d: AnyDate) {
@@ -252,17 +176,4 @@ export function parseDate(d: AnyDate) {
     }
 
     return dt;
-}
-
-export function toLocalISOString(
-    date: Date,
-    tzOffsetMin = -date.getTimezoneOffset()
-) {
-    const sign = tzOffsetMin >= 0 ? '+' : '-';
-    const diffHours = String(Math.floor(Math.abs(tzOffsetMin) / 60)).padStart(2, '0');
-    const diffMinutes = String(Math.abs(tzOffsetMin) % 60).padStart(2, '0');
-
-    return date.toLocaleString('lt').replace(' ', 'T') // or use: "sv-SE" (same effect)
-    + '.' + (date.getMilliseconds() + '').padStart(3, '0')
-    + sign + diffHours + ':' + diffMinutes;
 }
