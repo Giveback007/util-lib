@@ -26,17 +26,8 @@ export const average = (nArr: number[]) =>
  * decPlaces(1.1276, 2) //=> 1.13
  * ```
  */
-export const decPlace = (n: number, places: number) =>
-    parseFloat(n.toFixed(places));
-
-/**
- * @example
- * ```js
- * numberWithCommas(1000000) //=> '1,000,000'
- * ```
- */
-export const numberWithCommas = (n: number | string) =>
-    n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+export const numFixed = (n: number, fractionDigits: number) =>
+    parseFloat(n.toFixed(fractionDigits));
 
 /**
  * Takes a number || number[] and min & max, will generate a
