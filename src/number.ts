@@ -1,4 +1,4 @@
-import { arrToBoolDict, Dict, isType } from '.';
+import { arrToBoolDict, Dict, isType, num } from '.';
 
 /**
  * Returns a random whole number between `min` and `max`,
@@ -53,3 +53,7 @@ export function newNum(
 
     return num;
 }
+
+export const getProgress = (
+    total: num, nOfDone: num, fractionDigits = 2
+) => (nOfDone / total * 100).toFixed(fractionDigits);
