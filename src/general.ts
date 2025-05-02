@@ -39,10 +39,6 @@ export const interval = (
     };
 }
 
-/** A promise that waits `ms` amount of milliseconds to execute */
-export const wait = (ms: number): Promise<void> =>
-    new Promise((res) => setTimeout(() => res(), ms));
-
 const usubAllFunct = (x: any, unsubName = 'unsubscribe') =>
     isType(x, 'object')
     &&

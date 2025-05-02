@@ -5,8 +5,9 @@ export type StrKeys<T> = Extract<keyof T, string>;
 
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
-export type Optional<T, K extends keyof T = keyof T> =
-    { [P in K]?: T[P] };
+export type Optional<
+    T, K extends keyof T = keyof T
+> = { [P in K]?: T[P] };
 
 export type ResolvedValue<T> =
     T extends Promise <infer U> ? U : any;
@@ -62,9 +63,13 @@ export type MsTime = {
  * type Y => "k1" | "k3"
  * ```
  */
- export type KeysOfValueType<O, T> = { [I in keyof O]: O[I] extends T ? I : never }[keyof O];
+ export type KeysOfValueType<O, T> = {
+    [I in keyof O]: O[I] extends T ? I : never
+}[keyof O];
 
- export type AwaitReturn<T extends AnyFnc<any | Promise<any>>> = Awaited<ReturnType<T>>;
+ export type AwaitReturn<
+    T extends AnyFnc<any | Promise<any>>
+> = Awaited<ReturnType<T>>;
 
 export type num = number;
 export type str = string;
@@ -72,7 +77,14 @@ export type bol = boolean;
 
 export type AnyFnc<T = any> = (...args: any[]) => T;
 
-export type DayOfWeek = 'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat';
+export type DayOfWeek =
+    | 'Sun'
+    | 'Mon'
+    | 'Tue'
+    | 'Wed'
+    | 'Thu'
+    | 'Fri'
+    | 'Sat';
 
 export type TimeObj = {
     y:      num;
@@ -85,18 +97,16 @@ export type TimeObj = {
     wDay:   DayOfWeek;
 };
 
-export type PartialTimeObj = {
-    y:      num;
-    m?:     num;
-    d?:     num;
-    h?:     num;
-    min?:   num;
-    sec?:   num;
-    ms?:    num;
-};
+export type TimeArr = [
+    y: num,
+    m?: num,
+    d?: num,
+    h?: num,
+    min?: num,
+    sec?: num,
+    ms?: num
+];
 
-export type TimeArr = [y: num, m?: num, d?: num, h?: num, min?: num, sec?: num, ms?: num];
-
-export type AnyDate = string | number | Date | TimeObj | PartialTimeObj | TimeArr;
+export type AnyDate = string | number | Date | TimeObj | TimeArr;
 
 export type Dict<T> = { [id: string]: T };

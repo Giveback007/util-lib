@@ -1,6 +1,14 @@
 import { Temporal } from '@js-temporal/polyfill';
 import { AnyDate, isType, MsTime, num, str, TimeArr, TimeObj } from '.';
 
+/** A promise that waits `ms` amount of milliseconds to execute */
+export const wait = (ms: number): Promise<void> =>
+    new Promise((res) => setTimeout(() => res(), ms));
+
+/** Resolves after a given msEpoch passes. `msEpoch - Date.now()` */
+export const waitUntil = (msEpoch: number): Promise<void> =>
+    new Promise(res => setTimeout(res, msEpoch - Date.now()))
+
 export const msTime: MsTime = {
     s: 1000,
     m: 60000,
@@ -56,6 +64,7 @@ export const time = {
         min: (n: num) => Date.now() + n * msTime.m,
     },
 
+    /** Convert ms into: */
     msTo: {
         /** fnc(n)  -> from ms to num of seconds */
         sec: (ms: num) => ms / msTime.s,
@@ -97,21 +106,26 @@ export const humanizedTime = (date: AnyDate) => {
     }
 }
 
-// Intl.supportedValuesOf('timeZone');
 /** A Date substitute, to make working with time easier and more versatile */
 export function getTime(
-    t: TimeArr | num,
+    t?: TimeArr | num | str,
+    /** For a list of available timeZone values run:
+     * `Intl.supportedValuesOf('timeZone');` */
     timeZone?: str
 ) {
+    if (t === undefined) t = Date.now();
     timeZone = timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+
     let zonedTemporal: Temporal.ZonedDateTime;
     let date: Date;
     let isoStr: str;
 
-    if (typeof t === 'number') {
+    if (isType(t, 'number')) {
         date = new Date(t);
         isoStr = date.toISOString();
         zonedTemporal = Temporal.ZonedDateTime.from(isoStr + `[${timeZone}]`);
+    } else if (isType(t, 'string')) {
+        zonedTemporal = Temporal.ZonedDateTime.from(t + `[${timeZone}]`)
     } else {
         zonedTemporal = Temporal.ZonedDateTime.from({
             year: t[0],
@@ -123,10 +137,9 @@ export function getTime(
             millisecond: t[6] || 0,
             timeZone
         });
-
-        date = new Date(zonedTemporal.epochMilliseconds);
-        isoStr = date.toISOString();
     }
+
+    date = date! || new Date(zonedTemporal.epochMilliseconds);
 
     return {
         zonedTemporal,
@@ -134,7 +147,7 @@ export function getTime(
         tzOffsetMin: zonedTemporal.offsetNanoseconds / 60_000_000_000,
         localISO: zonedTemporal.toJSON(),
         timeObj: timeObj(zonedTemporal),
-        isoStr,
+        isoStr: isoStr! || date.toISOString(),
         timeZone: timeZone,
         epochMs: zonedTemporal.epochMilliseconds,
     }
@@ -157,7 +170,7 @@ export const timeObj = (dt: Date | Temporal.ZonedDateTime): TimeObj => dt instan
     min: dt.minute,
     sec: dt.second,
     ms: dt.millisecond,
-    wDay: weekTuple[dt.dayOfWeek]!
+    wDay: weekTuple[dt.dayOfWeek - 1]!
 });
 
 export function parseDate(d: AnyDate) {
