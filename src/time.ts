@@ -17,8 +17,6 @@ export const msTime: MsTime = {
     w: 604800000,
 }
 
-export const weekTuple = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
-
 /**
  * Converts Date to time of day.
  * Good for use in logging.
@@ -108,13 +106,14 @@ export const humanizedTime = (date: AnyDate) => {
 
 /** A Date substitute, to make working with time easier and more versatile */
 export function getTime(
-    t?: TimeArr | num | str,
+    t?: Temporal.ZonedDateTime | TimeArr | num | str | 'now',
     /** For a list of available timeZone values run:
      * `Intl.supportedValuesOf('timeZone');` */
     timeZone?: str
 ) {
-    if (t === undefined) t = Date.now();
-    timeZone = timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (t === undefined || t === 'now') t = Date.now();
+    if (!timeZone) timeZone = t instanceof Temporal.ZonedDateTime ?
+        t.timeZoneId : Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     let zonedTemporal: Temporal.ZonedDateTime;
     let date: Date;
@@ -126,6 +125,8 @@ export function getTime(
         zonedTemporal = Temporal.ZonedDateTime.from(isoStr + `[${timeZone}]`);
     } else if (isType(t, 'string')) {
         zonedTemporal = Temporal.ZonedDateTime.from(t + `[${timeZone}]`)
+    } else if (t instanceof Temporal.ZonedDateTime) {
+        zonedTemporal = t.withTimeZone(timeZone)
     } else {
         zonedTemporal = Temporal.ZonedDateTime.from({
             year: t[0],
@@ -146,10 +147,39 @@ export function getTime(
         date,
         tzOffsetMin: zonedTemporal.offsetNanoseconds / 60_000_000_000,
         localISO: zonedTemporal.toJSON(),
-        timeObj: timeObj(zonedTemporal),
+        obj: timeObj(zonedTemporal),
         isoStr: isoStr! || date.toISOString(),
         timeZone: timeZone,
         epochMs: zonedTemporal.epochMilliseconds,
+        startOf: {
+            day: () => getTime(zonedTemporal.startOfDay(), timeZone),
+
+            month: () => {
+                const zT = zonedTemporal;
+                return getTime([zT.year, zT.month, 1, 0, 0, 0, 0], timeZone)
+            },
+
+            year: () => {
+                const zT = zonedTemporal;
+                return getTime([zT.year, 1, 1, 0, 0, 0, 0], timeZone)
+            }
+        },
+        endOf: {
+            day: () => {
+                const zT = zonedTemporal;
+                return getTime([zT.year, zT.month, zT.day, 23, 59, 59, 999], timeZone)
+            },
+
+            month: () => {
+                const zT = zonedTemporal;
+                return getTime([zT.year, zT.month, zT.daysInMonth, 23, 59, 59, 999], timeZone)
+            },
+
+            year: () => {
+                const zT = zonedTemporal;
+                return getTime([zT.year, 12, 31, 23, 59, 59, 999], timeZone)
+            }
+        }
     }
 }
 
@@ -161,7 +191,7 @@ export const timeObj = (dt: Date | Temporal.ZonedDateTime): TimeObj => dt instan
     min: dt.getMinutes(),
     sec: dt.getSeconds(),
     ms: dt.getMilliseconds(),
-    wDay: weekTuple[dt.getDay()]!
+    wDay: (['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const)[dt.getDay()]!
 }) : ({
     y: dt.year,
     m: dt.month,
@@ -170,7 +200,7 @@ export const timeObj = (dt: Date | Temporal.ZonedDateTime): TimeObj => dt instan
     min: dt.minute,
     sec: dt.second,
     ms: dt.millisecond,
-    wDay: weekTuple[dt.dayOfWeek - 1]!
+    wDay: (['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const)[dt.dayOfWeek - 1]!
 });
 
 export function parseDate(d: AnyDate) {
