@@ -157,7 +157,7 @@ export class StateManager<
     stateSub = <K extends Key = Key>(
         keys: true | K[] | K,
         fct: stateSubFct<State>,
-        fireOnInitSub = false
+        fireOnInitSub = true
     ) => {
         if (isType(keys, 'array') && keys.length === 1)
             keys = keys[0]!;

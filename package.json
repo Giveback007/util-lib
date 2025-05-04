@@ -1,6 +1,6 @@
 {
     "name": "@giveback007/util-lib",
-    "version": "2.3.2",
+    "version": "2.4.1",
     "description": "Utility library",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",

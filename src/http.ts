@@ -1,4 +1,4 @@
-import { Dict } from "./@types";
+import { Dict, str } from "./@types";
 import { nonVal } from "./test";
 
 export function joinParamsToUrl(
@@ -14,6 +14,18 @@ export function joinParamsToUrl(
     );
 
     return u.href;
+}
+
+export function queryParamsFromUrl<T = Dict<str>>(
+    url: str | URL
+) {
+    if (typeof url === 'string') url = new URL(url);
+    const queryParams = {} as T;
+    url.searchParams.forEach((val, key) => {
+        (queryParams as any)[key] = val
+    });
+
+    return queryParams;
 }
 
 export async function fetchJSON<T = any, ErrData = any>(
