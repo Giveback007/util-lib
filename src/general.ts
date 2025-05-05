@@ -44,7 +44,11 @@ const usubAllFunct = (x: any, unsubName = 'unsubscribe') =>
     &&
     hasKey(x, unsubName) ? x[unsubName]() : null;
 
-export function unsubAll(objOrArr: AnyObj | any[], unsubName = 'unsubscribe') {
+/**
+ * @param objOrArr takes an object or array of objects
+ * @param unsubName takes the name of the key on the object @default "unsubscribe"
+ */
+export function unsubAll(objOrArr: AnyObj | AnyObj[], unsubName = 'unsubscribe') {
     if (isType(objOrArr, 'array'))
         objOrArr.forEach(x => usubAllFunct(x, unsubName));
     else if (isType(objOrArr, 'object'))

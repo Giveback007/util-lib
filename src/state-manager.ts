@@ -92,8 +92,8 @@ export class StateManager<
         return this.getState();
     }
 
-    action = <A extends Act = Act>(action: A | A['type']) => {
-        if (isType(action, 'string')) action = { type: action } as A;
+    action = <A extends Act = Act>(action: A | A['T']) => {
+        if (isType(action, 'string')) action = { T: action } as A;
         const state = this.getState();
 
         for (const k in this.actionSubDict)
@@ -183,7 +183,7 @@ export class StateManager<
 
     /** set `true` if to subscribe to all actions */
     actionSub = <
-        T extends Act['type'] = Act['type'],
+        T extends Act['T'] = Act['T'],
         A extends Extract<Act, { type: T }> = Extract<Act, { type: T }>
     >(
         actions: true | T | T[],
