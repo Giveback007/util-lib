@@ -1,13 +1,14 @@
 {
     "name": "@giveback007/util-lib",
-    "version": "2.5.1",
+    "version": "2.5.2",
     "description": "Utility library",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
         "pub": "rm -rf dist /s /f /q && npm run build && npm publish",
         "build": "tsc",
-        "build:watch": "tsc --watch"
+        "build:watch": "tsc --watch",
+        "test": "deno run --watch test.ts"
     },
     "files": [
         "/dist",

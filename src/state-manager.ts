@@ -184,7 +184,7 @@ export class StateManager<
     /** set `true` if to subscribe to all actions */
     actionSub = <
         T extends Act['T'] = Act['T'],
-        A extends Extract<Act, { type: T }> = Extract<Act, { type: T }>
+        A extends Extract<Act, { T: T }> = Extract<Act, { T: T }>
     >(
         actions: true | T | T[],
         fct: actSubFct<A, State>
@@ -195,12 +195,12 @@ export class StateManager<
         let f = fct;
 
         if (isType(actions, 'string')) f = (a, s) => {
-            if (a.type === actions) return fct(a, s);
+            if (a.T === actions) return fct(a, s);
         }
 
         else if (isType(actions, 'array')) f = (a, s) => {
-            for (const act of actions as T['type'][])
-                if (a.type === act) return fct(a, s);
+            for (const act of actions as T['T'][])
+                if (a.T === act) return fct(a, s);
         }
 
         const id = Math.random();
