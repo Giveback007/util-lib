@@ -165,17 +165,17 @@ export function promiseOut<T = any>() {
 
 export async function concurrentTasks<T, Res = any>(
     arr: T[],
-    fn: (x: T, idx: number) => Promise<Res> | Res,
+    fn: (arr: T, arrIdx: number, concurrentIdx: num) => Promise<Res> | Res,
     nOfConcurrentTasks = 8
 ): Promise<Res[]> {
     let idx = -1;
     const result: Res[] = [];
 
-    await Promise.all(Array(nOfConcurrentTasks).fill(0).map(async () => {
+    await Promise.all(Array(nOfConcurrentTasks).fill(0).map(async (_, cI) => {
         let data: T | undefined;
         while (data = arr[++idx]) {
             const i = idx;
-            result[i] = await fn(data, idx)
+            result[i] = await fn(data, idx, cI)
         }
     }));
 
@@ -188,4 +188,14 @@ export function hash(str: string) {
         hash = (hash * 31n + BigInt(str.charCodeAt(i))) & 0xFFFFFFFFFFFFFFFFn;
 
     return hash.toString(36);
+}
+
+export function formatFileSize(bytes: num) {
+    if (bytes === 0) return '0 B';
+
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }

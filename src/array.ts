@@ -27,6 +27,11 @@ export function arrRemoveById<
     return objVals(keep);
 }
 
+export function arrRemoveItemByIndex<T>(arr: T[], index: number) {
+    // Use slice to create a new array without the item at the given index
+    return arr.slice(0, index).concat(arr.slice(index + 1));
+}
+
 /**
  * Gets values out of `arr` that match the ids in `idArr`
  *

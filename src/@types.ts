@@ -110,3 +110,8 @@ export type TimeArr = [
 export type AnyDate = string | number | Date | TimeObj | TimeArr;
 
 export type Dict<T> = { [id: string]: T };
+
+export type GeoPoint = {
+    lon: number;
+    lat: number;
+}

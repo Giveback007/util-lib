@@ -1,9 +1,11 @@
 {
     "cSpell.words": [
+        "Dovydas",
         "funct",
         "gmail",
         "iana",
         "idxs",
+        "Stirpeika",
         "tslib",
         "Unmount",
         "unsub",
@@ -13,9 +15,6 @@
     ],
     "editor.rulers": [72],
     "typescript.tsdk": "node_modules\\typescript\\lib",
-    "tslint.alwaysShowRuleFailuresAsWarnings": true,
-    "tslint.exclude": "**/node_modules/**/*",
-    "debug.node.autoAttach": "on",
     "debug.showInStatusBar": "never",
     "debug.toolBarLocation": "floating",
     "debug.openDebug": "neverOpen"
