@@ -154,6 +154,27 @@ export function getTime(
         startOf: {
             day: () => getTime(zonedTemporal.startOfDay(), timeZone),
 
+            week: (
+                weekStartsOn: "sun" | "mon" = "sun"
+            ) => {
+                const zT = zonedTemporal;
+                // dayOfWeek: 1 = Monday, 7 = Sunday
+                const currentDay = zT.dayOfWeek;
+                
+                // Calculate days to subtract to get to week start
+                let daysToSubtract: number;
+                if (weekStartsOn === "sun") {
+                    // Week starts on Sunday
+                    daysToSubtract = currentDay === 7 ? 0 : currentDay;
+                } else {
+                    // Week starts on Monday
+                    daysToSubtract = currentDay - 1;
+                }
+                
+                const weekStart = zT.subtract({ days: daysToSubtract }).startOfDay();
+                return getTime(weekStart, timeZone);
+            },
+
             month: () => {
                 const zT = zonedTemporal;
                 return getTime([zT.year, zT.month, 1, 0, 0, 0, 0], timeZone)
@@ -168,6 +189,27 @@ export function getTime(
             day: () => {
                 const zT = zonedTemporal;
                 return getTime([zT.year, zT.month, zT.day, 23, 59, 59, 999], timeZone)
+            },
+
+            week: (
+                weekStartsOn: "sun" | "mon" = "sun"
+            ) => {
+                const zT = zonedTemporal;
+                // dayOfWeek: 1 = Monday, 7 = Sunday
+                const currentDay = zT.dayOfWeek;
+                
+                // Calculate days to add to get to week end
+                let daysToAdd: number;
+                if (weekStartsOn === "sun") {
+                    // Week ends on Saturday (day 6)
+                    daysToAdd = currentDay === 7 ? 6 : 6 - currentDay;
+                } else {
+                    // Week ends on Sunday (day 7)
+                    daysToAdd = 7 - currentDay;
+                }
+                
+                const weekEnd = zT.add({ days: daysToAdd });
+                return getTime([weekEnd.year, weekEnd.month, weekEnd.day, 23, 59, 59, 999], timeZone);
             },
 
             month: () => {
