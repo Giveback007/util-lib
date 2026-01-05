@@ -165,7 +165,7 @@ export function promiseOut<T = any>() {
 
 export async function concurrentTasks<T, Res = any>(
     arr: T[],
-    fn: (arr: T, arrIdx: number, concurrentIdx: num) => Promise<Res> | Res,
+    fn: (item: T, arrIdx: number, concurrentIdx: num) => Promise<Res> | Res,
     nOfConcurrentTasks = 8
 ): Promise<Res[]> {
     let idx = -1;

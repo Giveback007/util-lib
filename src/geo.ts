@@ -1,22 +1,20 @@
 import { GeoPoint } from "./@types";
 
 export const haversineDistance = (
-    geo1: GeoPoint | [lat: number, lat: number],
-    geo2: GeoPoint | [lat: number, lat: number],
+    geo1: GeoPoint | [lat: number, lon: number],
+    geo2: GeoPoint | [lat: number, lon: number],
     type: 'mi' | 'km' = 'km',
 ) => {
     let lat1 = 0, lon1 = 0, lat2 = 0, lon2 = 0;
     if (Array.isArray(geo1)) {
-        lat1 = geo1[0];
-        lat1 = geo1[1];
+        [lat1, lon1] = geo1;
     } else {
         lat1 = geo1.lat;
         lon1 = geo1.lon;
     }
 
     if (Array.isArray(geo2)) {
-        lat2 = geo2[0];
-        lat2 = geo2[1];
+        [lat2, lon2] = geo2;
     } else {
         lat2 = geo2.lat;
         lon2 = geo2.lon;
