@@ -14,3 +14,4 @@ export * from './state-manager';
 export * from './string';
 export * from './test';
 export * from './time';
+export * from './http';

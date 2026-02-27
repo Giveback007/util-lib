@@ -1,6 +1,13 @@
 import { Dict, str } from "./@types";
 import { nonVal } from "./test";
 
+export function extractHeaders(headers: Headers): Dict<str> {
+    const obj: Dict<str> = {};
+    headers.forEach((val, key) => obj[key] = val);
+
+    return obj;
+}
+
 export function joinParamsToUrl(
     url: string,
     searchParams: Dict<string | number | undefined | null>,

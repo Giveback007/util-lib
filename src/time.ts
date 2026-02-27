@@ -151,6 +151,14 @@ export function getTime(
         isoStr: isoStr! || date.toISOString(),
         timeZone: timeZone,
         epochMs: zonedTemporal.epochMilliseconds,
+        add: (o: Partial<TimeObj>) => 
+            getTime(zonedTemporal.add(timeObjToTeDuration(o)), timeZone),
+        subtract: (o: Partial<TimeObj>) =>
+            getTime(zonedTemporal.subtract(timeObjToTeDuration(o)), timeZone),
+        set: (o: Partial<Omit<TimeObj, 'wDay'>> & { timeZone?: str }) => 
+            getTime(zonedTemporal.with({ year: o.y, month: o.m, day: o.d, hour: o.h, minute: o.min, second: o.sec, millisecond: o.ms, timeZone }, { overflow: 'constrain' }), timeZone),
+        setTz: (timeZone: str) => 
+            getTime(zonedTemporal, timeZone),
         startOf: {
             day: () => getTime(zonedTemporal.startOfDay(), timeZone),
 
@@ -224,6 +232,16 @@ export function getTime(
         }
     }
 }
+
+export const timeObjToTeDuration = (o: Partial<TimeObj>): Temporal.DurationLike => ({
+    years: o.y,
+    months: o.m,
+    days: o.d,
+    hours: o.h,
+    minutes: o.min,
+    seconds: o.sec,
+    milliseconds: o.ms,
+});
 
 export const timeObj = (dt: Date | Temporal.ZonedDateTime): TimeObj => dt instanceof Date ? ({
     y: dt.getFullYear(),
