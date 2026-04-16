@@ -3,7 +3,7 @@ import {
     isType, nonVal, objRemoveKeys, objVals, equal
 } from '.';
 
-/** Generates an array of null values */
+/** Generates an array by length */
 export const arrGen = <T = any>(
     length: number,
     fill: number | BigInt | string | boolean | undefined | null = undefined
@@ -44,9 +44,27 @@ export function arrRemoveItemByIndex<T>(arr: T[], index: number) {
  */
 export function arrGetByIds<
     T extends AnyObj
->(arr: T[], idArr: string[], idKey: keyof T = 'id') {
-    const dict = arrToBoolDict(idArr);
+>(arr: T[], ids: string[] | string, idKey: keyof T = 'id') {
+    if (!Array.isArray(ids)) ids = [ids];
+
+    const dict = arrToBoolDict(ids);
     return arr.filter((x) => dict[x[idKey]]);
+}
+
+export function arrReplaceByIds<
+    T extends AnyObj
+>(
+    arr: T[],
+    replacements: T[] | T,
+    idKey: keyof T = 'id'
+) {
+    if (!Array.isArray(replacements)) replacements = [replacements];
+    const dict = arrToDict(replacements, idKey);
+
+    return arr.map(x => {
+        const replace = dict[x[idKey]];
+        return replace || x;
+    })
 }
 
 /**

@@ -10,8 +10,6 @@
     /* Basic Options */
     "target": "ES2024",
     "module": "commonjs",
-    "moduleResolution": "node",
-    "baseUrl": "./",
     "rootDir": "./src",
     "outDir": "dist/",
     "declaration": true,
