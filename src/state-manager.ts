@@ -1,15 +1,11 @@
-import type {
-    Action, actSubFct, lsOptions, stateSubFct
-} from './@state.types';
+import type { Action, actSubFct, lsOptions, stateSubFct } from './@state.types.js';
+import type { Dict, KeysOfValueType } from './@types.js'
 
-import {
-    Dict, KeysOfValueType
-} from '.'
-
-import {
-    wait, equal, objExtract,
-    isType, objKeys, clone
-} from '.';
+import { wait } from './time.js';
+import { equal } from './equality.js';
+import { objExtract, objKeys } from './object.js';
+import { isType } from './test.js';
+import { clone } from './clone.js';
 
 export class StateManager<
     State extends {},

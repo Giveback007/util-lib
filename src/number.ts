@@ -1,4 +1,7 @@
-import { arrToBoolDict, Dict, isType, num } from '.';
+import type { Dict, num } from './@types.js';
+
+import { arrToBoolDict } from './array.js';
+import { isType } from './test.js';
 
 /**
  * Returns a random whole number between `min` and `max`,

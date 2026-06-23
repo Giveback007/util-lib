@@ -1,5 +1,8 @@
-import { equal, JsType } from '.';
-import { JsTypeFind, objVals, type } from '.';
+import type { JsType, JsTypeFind } from './@types.js';
+
+import { equal } from './equality.js';
+import { objVals } from './object.js';
+import { type } from './general.js';
 
 /** Check if `x` is equal to any of the values in the array. */
 export const equalAny = (x: any, equals: any[]) => !!equals.find((y) => equal(x, y));

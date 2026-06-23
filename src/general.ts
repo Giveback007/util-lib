@@ -1,5 +1,8 @@
-import type { AnyFnc, AnyObj, Dict, JsType, num, str } from '.';
-import { isType, objMap, hasKey, clone } from '.';
+import type { AnyFnc, AnyObj, Dict, JsType, num, str } from './@types.js';
+
+import { isType, hasKey } from './test.js';
+import { objMap } from './object.js';
+import { clone } from './clone.js';
 
 /**
  * @example

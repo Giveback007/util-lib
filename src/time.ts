@@ -1,5 +1,7 @@
+import type { AnyDate, MsTime, num, str, TimeArr, TimeObj } from './@types.js';
+
 import { Temporal } from '@js-temporal/polyfill';
-import { AnyDate, isType, MsTime, num, str, TimeArr, TimeObj } from '.';
+import { isType } from './test.js';
 
 /** A promise that waits `ms` amount of milliseconds to execute */
 export const wait = (ms: number): Promise<void> =>

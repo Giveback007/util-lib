@@ -1,5 +1,5 @@
-import { Dict } from "./@types";
-import { isType } from "./test";
+import { Dict } from "./@types.js";
+import { isType } from "./test.js";
 import { twMerge as _twMerge  } from "tailwind-merge";
 
 type StorageType = 'localStorage' | 'sessionStorage';

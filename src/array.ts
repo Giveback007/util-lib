@@ -1,7 +1,8 @@
-import type { AnyObj, Dict } from '.';
-import {
-    isType, nonVal, objRemoveKeys, objVals, equal
-} from '.';
+import type { AnyObj, Dict } from './@types.js';
+
+import { isType, nonVal } from './test.js';
+import { objRemoveKeys, objVals } from './object.js';
+import { equal } from './equality.js';
 
 /** Generates an array by length */
 export const arrGen = <T = any>(

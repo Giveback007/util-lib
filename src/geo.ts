@@ -1,4 +1,4 @@
-import type { GeoPoint, num } from "./@types";
+import type { GeoPoint, num } from "./@types.js";
 
 export const haversineDistance = (
     geo1: GeoPoint | [lat: num, lon: num],

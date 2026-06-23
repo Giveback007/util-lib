@@ -14,9 +14,6 @@ importers:
       tailwind-merge:
         specifier: ^3.6.0
         version: 3.6.0
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       typescript:
         specifier: 7.0.1-rc
@@ -154,9 +151,6 @@ packages:
   tailwind-merge@3.6.0:
     resolution: {integrity: sha512-uxL7qAVQriqRQPAyK3pj66VqskWqoZ37PW94jwOTwNfq/z9oyu1V+eqrZqtR2+fCiXdYOZe/Modt8GtvqNzu+w==}
 
-  tslib@2.8.1:
-    resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
-
   typescript@7.0.1-rc:
     resolution: {integrity: sha512-drEP77wK7CCDlPfXZH4e008UUQOsw1DFmHmZOZjuNA+yoDLLnSNMZRXi90NbV/1LVo7SbNLq1bs3jjvk49TEqQ==}
     engines: {node: '>=16.20.0'}
@@ -231,8 +225,6 @@ snapshots:
   jsbi@4.3.2: {}
 
   tailwind-merge@3.6.0: {}
-
-  tslib@2.8.1: {}
 
   typescript@7.0.1-rc:
     optionalDependencies:

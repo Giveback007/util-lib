@@ -1,5 +1,5 @@
-import { Dict, str } from "./@types";
-import { nonVal } from "./test";
+import { Dict, str } from "./@types.js";
+import { nonVal } from "./test.js";
 
 export function extractHeaders(headers: Headers): Dict<str> {
     const obj: Dict<str> = {};

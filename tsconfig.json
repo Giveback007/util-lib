@@ -9,7 +9,7 @@
 
     /* Basic Options */
     "target": "ESNext",
-    "module": "commonjs",
+    "module": "nodenext",
     "rootDir": "./src",
     "outDir": "dist/",
     "declaration": true,

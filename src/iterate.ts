@@ -1,4 +1,4 @@
-import { arrDivide } from './array';
+import { arrDivide } from './array.js';
 
 type x = { x: number };
 type xy = { x: number, y: number };
