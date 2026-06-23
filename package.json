@@ -1,11 +1,14 @@
 {
     "name": "@giveback007/util-lib",
-    "version": "3.5.2",
+    "version": "3.5.3",
     "description": "Utility library",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "[--NOTES--]": [
+        "run `npm login` first, then run `npm run pub`"
+    ],
     "scripts": {
-        "pub": "rm -rf dist /s /f /q && npm run build && npm publish",
+        "pub": "rm -rf dist /s /f /q && npm run build && npm login && npm publish",
         "build": "tsc",
         "build:watch": "tsc --watch",
         "test": "deno run --watch test.ts"
@@ -27,10 +30,10 @@
     "homepage": "https://github.com/Giveback007/util-lib#readme",
     "dependencies": {
         "@js-temporal/polyfill": "^0.5.1",
-        "tailwind-merge": "^3.5.0",
+        "tailwind-merge": "^3.6.0",
         "tslib": "^2.8.1"
     },
     "devDependencies": {
-        "typescript": "^5.9.3"
+        "typescript": "7.0.1-rc"
     }
 }

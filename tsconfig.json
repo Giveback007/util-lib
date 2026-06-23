@@ -8,7 +8,7 @@
   "compilerOptions": {
 
     /* Basic Options */
-    "target": "ES2024",
+    "target": "ESNext",
     "module": "commonjs",
     "rootDir": "./src",
     "outDir": "dist/",
@@ -19,7 +19,6 @@
     "forceConsistentCasingInFileNames": true,
     "pretty": true,
     "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
 
     /* -- Strict Type-Checking Options -- */
