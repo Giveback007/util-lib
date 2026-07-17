@@ -1,6 +1,6 @@
 {
     "name": "@giveback007/util-lib",
-    "version": "4.0.1",
+    "version": "4.1.0",
     "description": "Utility library",
     "type": "module",
     "main": "dist/index.js",
@@ -15,7 +15,7 @@
         "run `npm login` first, then run `npm run pub`"
     ],
     "scripts": {
-        "pub": "rm -rf dist /s /f /q && npm run build && npm login && npm publish",
+        "pub": "rm -rf dist && npm run build && npm login && npm publish",
         "build": "tsc",
         "build:watch": "tsc --watch",
         "test": "deno run --watch test.ts"
@@ -40,6 +40,6 @@
         "tailwind-merge": "^3.6.0"
     },
     "devDependencies": {
-        "typescript": "7.0.1-rc"
+        "typescript": "5.9.3"
     }
 }

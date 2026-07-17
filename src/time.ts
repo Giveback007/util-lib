@@ -282,3 +282,20 @@ export function parseDate(d: AnyDate) {
 
     return dt;
 }
+
+export function toUnix(d: string | number | Date) {
+    if (isType(d, 'string')) d = new Date(d).getTime();
+    if (d instanceof Date) d = d.getTime();
+
+    return d;
+}
+
+export function dateIs(d: string | number | Date) {
+    d = toUnix(d);
+
+    return {
+        greaterThan: (target: string | number | Date) => d > toUnix(target),
+        lessThan: (target: string | number | Date) => d < toUnix(target),
+    };
+
+}

@@ -15,7 +15,7 @@
     "declaration": true,
 
     /* Additional Options */
-    "skipLibCheck": true,
+    "skipLibCheck": false,
     "forceConsistentCasingInFileNames": true,
     "pretty": true,
     "sourceMap": true,

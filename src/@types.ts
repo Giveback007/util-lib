@@ -121,3 +121,5 @@ export type Prettify<T> = {
 } & {};
 
 export type MaybePromise<T> = T | Promise<T>;
+
+export type TypedString<T extends string> = T | (string & {});
